@@ -1,64 +1,72 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.28;
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.30;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 error InsufficientBalance();
-error NonZeroValue();
-error WithdrawFailed();
+error NonZeroAddress();
+error UserCannotTransferToken();
 
-contract Box10 is Ownable, ReentrancyGuard {
+contract Box10 is ERC20, Ownable {
 
-    constructor() Ownable(msg.sender) {}
+    event Distribute(address _to, uint _amount, string _activity);
+    event TransferToken(address _from, address _to, uint _amount);
+    event MintToken(address _from, address _to, uint _amount);
+    event BurnToken(address _from, address _to, uint _amount);
 
-    struct Member {
-        uint balance;
+    constructor(address _owner) ERC20("BOX10 Token", "BOX10") Ownable(_owner) {
+        require(_owner != address(0), "Owner cannot be zero address");
+
+        _mint(address(this), 1000000000 * 10**decimals());
     }
 
-    mapping(address => Member) members;
+    /*
+     * @dev Function to send Box10 token to an address (cannot burn or mint)
+     * @param _to Address to send token
+     * @param _amount Amount od token to transfer
+     * @param _activity Trigger action
+     */
+    function distribute(address _to, uint _amount, string calldata _activity) external onlyOwner {
+        require(_to != address(0), NonZeroAddress());
 
-    event DepositFund(address by, uint amount);
-    event WithdrawFund(address by, uint amount);
+        uint amountInWei = _amount * 10**decimals();
 
-    function deposit() external payable {
-        require(msg.value > 0, NonZeroValue());
-        members[msg.sender].balance += msg.value;
-        emit DepositFund(msg.sender, msg.value);
+        require(balanceOf(address(this)) >= amountInWei, InsufficientBalance());
+
+        _transfer(address(this), _to, amountInWei);
+
+        emit Distribute(_to, _amount, _activity);
     }
 
-    function getMyBalance() external view returns (uint) {
-        return members[msg.sender].balance;
+    /*
+     * @dev Get available supply of Box10 token
+     * @return Balance of contract (not in wei)
+     */
+    function availableSupply() external view returns (uint) {
+        return balanceOf(address(this)) / 10**decimals();
     }
 
-    function getBalanceFor(address _address) external view returns (uint) {
-        return members[_address].balance;
-    }
+    /*
+     * @dev Override _update function from ERC20.sol to avoid transfer between user
+     */
+    function _update(address _from, address _to, uint256 _amount) internal virtual override {
+        // Mint
+        if (_from == address(0)) {
+            super._update(_from, _to, _amount);
+            emit MintToken(_from, _to, _amount);
+            return;
+        }
+        // Burn
+        if (_to == address(0)) {
+            super._update(_from, _to, _amount);
+            emit BurnToken(_from, _to, _amount);
+            return;
+        }
+        // Transfer
+        require(_from == address(this) || _from == owner(), UserCannotTransferToken());
 
-    function withdraw(uint _amount) nonReentrant external  {
-        require(_amount > 0, NonZeroValue());
-        require(_amount <= members[msg.sender].balance, InsufficientBalance());
-
-        // Pattern Checks-Effects-Interactions
-        members[msg.sender].balance -= _amount;
-
-        (bool success, ) = msg.sender.call{value: _amount}("");
-        require(success, WithdrawFailed());
-
-        emit WithdrawFund(msg.sender, _amount);
-    }
-
-    function getContractBalance() public view returns (uint256) {
-        return address(this).balance;
-    }
-
-    receive() external payable {
-        members[msg.sender].balance += msg.value;
-        emit DepositFund(msg.sender, msg.value);
-    }
-
-    fallback() external payable {
-        members[msg.sender].balance += msg.value;
-        emit DepositFund(msg.sender, msg.value);
+        super._update(_from, _to, _amount);
+        emit TransferToken(_from, _to, _amount);
     }
 }
