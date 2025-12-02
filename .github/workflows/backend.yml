@@ -1,14 +1,23 @@
-name: Tests Unitaires
+name: Backend Tests
 
 on:
   push:
     branches: [ main, develop ]
+    paths:
+      - 'backend/**'
+      - 'backend.yml'
   pull_request:
     branches: [ main, develop ]
+    paths:
+      - 'backend/**'
+      - 'backend.yml'
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
 
     steps:
       - name: Checkout code
@@ -19,6 +28,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
 
       - name: Install dependencies
         run: npm ci
