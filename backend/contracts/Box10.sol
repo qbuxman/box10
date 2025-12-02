@@ -17,8 +17,6 @@ contract Box10 is ERC20, Ownable {
     event BurnToken(address _from, address _to, uint _amount);
 
     constructor(address _owner) ERC20("BOX10 Token", "BOX10") Ownable(_owner) {
-        require(_owner != address(0), "Owner cannot be zero address");
-
         _mint(address(this), 1000000000 * 10**decimals());
     }
 

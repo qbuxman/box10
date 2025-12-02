@@ -1,9 +1,9 @@
 import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
 
 export default buildModule("Box10Module", (m) => {
-    const deployAddress = '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266'
+    const ownerAddress = '0x2C3F167288903caB856138845B9B3065684CF0D9'
 
-    const box10 = m.contract("Box10", [deployAddress]);
+    const box10 = m.contract("Box10", [ownerAddress]);
 
     return { box10 };
 });
