@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 error InsufficientBalance();
 error NonZeroAddress();
 error UserCannotTransferToken();
+error NonZeroValue();
 
 contract Box10 is ERC20, Ownable {
 
@@ -45,6 +46,14 @@ contract Box10 is ERC20, Ownable {
      */
     function availableSupply() external view returns (uint) {
         return balanceOf(address(this)) / 10**decimals();
+    }
+
+    function burn(uint _amount) external {
+        require(_amount > 0, NonZeroValue());
+
+        _update(msg.sender, address(0), _amount);
+
+        emit BurnToken(msg.sender, address(0), _amount);
     }
 
     /*
