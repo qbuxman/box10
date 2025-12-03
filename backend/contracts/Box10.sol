@@ -4,10 +4,12 @@ pragma solidity 0.8.30;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
+// Errors
 error InsufficientBalance();
 error NonZeroAddress();
 error UserCannotTransferToken();
 error NonZeroValue();
+error ApprovalsNotAllowed();
 
 contract Box10 is ERC20, AccessControl {
     // Roles
@@ -37,7 +39,7 @@ contract Box10 is ERC20, AccessControl {
      * @param _distributor Address whose role is added
      */
     function addDistributor(address _distributor) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        require(_distributor != address(0), NonZeroAddress());
+        if (_distributor == address(0)) revert NonZeroAddress();
 
         _grantRole(DISTRIBUTOR_ROLE, _distributor);
 
@@ -48,7 +50,7 @@ contract Box10 is ERC20, AccessControl {
      * @param _distributor Address whose role is deleted
      */
     function removeDistributor(address _distributor) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        require(_distributor != address(0), NonZeroAddress());
+        if (_distributor == address(0)) revert NonZeroAddress();
 
         revokeRole(DISTRIBUTOR_ROLE, _distributor);
 
@@ -77,11 +79,11 @@ contract Box10 is ERC20, AccessControl {
      * @param _activity Trigger action
      */
     function distribute(address _to, uint _amount, string calldata _activity) external onlyRole(DISTRIBUTOR_ROLE) {
-        require(_to != address(0), NonZeroAddress());
+        if (_to == address(0)) revert NonZeroAddress();
 
         uint amountInWei = _amount * 10**decimals();
 
-        require(balanceOf(address(this)) >= amountInWei, InsufficientBalance());
+        if (balanceOf(address(this)) < amountInWei) revert InsufficientBalance();
 
         _transfer(address(this), _to, amountInWei);
 
@@ -99,7 +101,7 @@ contract Box10 is ERC20, AccessControl {
      * @param _amount Amount of token to burn
      */
     function burnToken(uint _amount) external {
-        require(_amount > 0, NonZeroValue());
+        if (_amount == 0) revert NonZeroValue();
 
         _burn(msg.sender, _amount);
 
@@ -112,7 +114,7 @@ contract Box10 is ERC20, AccessControl {
      * @param _amount
      */
     function _update(address _from, address _to, uint256 _amount) internal virtual override {
-        require(_amount > 0, NonZeroValue());
+        if (_amount == 0) revert NonZeroValue();
 
         // Mint
         if (_from == address(0)) {
@@ -131,10 +133,21 @@ contract Box10 is ERC20, AccessControl {
         }
 
         // Transfer
-        require(_from == address(this) || hasRole(DEFAULT_ADMIN_ROLE, _from), UserCannotTransferToken());
+        if (_from != address(this) && !hasRole(DEFAULT_ADMIN_ROLE, _from)) revert UserCannotTransferToken();
 
         super._update(_from, _to, _amount);
 
         emit TransferToken(_from, _to, _amount);
+    }
+    /*
+     * @dev Disable approval for everyone
+     */
+    function _approve(
+        address owner,
+        address spender,
+        uint256 value,
+        bool emitEvent
+    ) internal virtual override {
+        revert ApprovalsNotAllowed();
     }
 }

@@ -45,6 +45,19 @@ describe("Box10", function () {
                 contract.connect(firstUser).distribute(secondUser.address, 100n, actions.completedQuiz)
             ).to.be.revertedWithCustomError(contract, "AccessControlUnauthorizedAccount");
         });
+
+        it("Should revert if trying to distribute to zero address", async () => {
+            await expect(
+                contract.connect(distributor).distribute(zeroAddress, 100n, actions.subscription)
+            ).to.be.revertedWithCustomError(contract, "NonZeroAddress");
+        });
+
+        it("Should revert if insufficient balance in contract", async () => {
+            const hugeAmount = 2000000000n;
+            await expect(
+                contract.connect(distributor).distribute(secondUser.address, hugeAmount, actions.subscription)
+            ).to.be.revertedWithCustomError(contract, "InsufficientBalance");
+        });
     });
 
     describe("addDistributor", () => {
@@ -56,12 +69,18 @@ describe("Box10", function () {
             expect(await contract.isDistributor(firstUser.address)).to.be.true;
         });
 
-        it("Should revert id non admin try to add distributor", async () => {
+        it("Should revert if non admin try to add distributor", async () => {
             await expect(
                 contract.connect(firstUser).addDistributor(secondUser.address)
             ).revertedWithCustomError(contract, "AccessControlUnauthorizedAccount");
 
             expect(await contract.isDistributor(secondUser.address)).to.be.false;
+        });
+
+        it("Should revert if trying to add zero address as distributor", async () => {
+            await expect(
+                contract.connect(admin).addDistributor(zeroAddress)
+            ).to.be.revertedWithCustomError(contract, "NonZeroAddress");
         });
     });
 
@@ -76,12 +95,18 @@ describe("Box10", function () {
             expect(await contract.isDistributor(firstUser.address)).to.be.false;
         });
 
-        it("Should revert id non admin try to remove distributor", async () => {
+        it("Should revert if non admin try to remove distributor", async () => {
             await expect(
                 contract.connect(firstUser).removeDistributor(secondUser.address)
             ).revertedWithCustomError(contract, "AccessControlUnauthorizedAccount");
 
             expect(await contract.isDistributor(secondUser.address)).to.be.false;
+        });
+
+        it("Should revert if trying to remove zero address as distributor", async () => {
+            await expect(
+                contract.connect(admin).removeDistributor(zeroAddress)
+            ).to.be.revertedWithCustomError(contract, "NonZeroAddress");
         });
     });
 
@@ -96,6 +121,45 @@ describe("Box10", function () {
             await expect(contract.connect(firstUser).burnToken(10))
                 .to.emit(contract, "BurnToken")
                 .withArgs(firstUser.address, 10);
-        })
-    })
+        });
+
+        it("Should revert if trying to burn zero amount", async () => {
+            await expect(
+                contract.connect(firstUser).burnToken(0)
+            ).to.be.revertedWithCustomError(contract, "NonZeroValue");
+        });
+    });
+
+    describe("Transfer restrictions", () => {
+        it("Should revert if user tries to transfer to another user", async () => {
+            await expect(
+                contract.connect(firstUser).transfer(secondUser.address, 10)
+            ).to.be.revertedWithCustomError(contract, "UserCannotTransferToken");
+        });
+
+        it("Should revert if trying to transfer zero amount", async () => {
+            await expect(
+                contract.connect(distributor).distribute(firstUser.address, 0, actions.subscription)
+            ).to.be.revertedWithCustomError(contract, "NonZeroValue");
+        });
+
+        it("Should allow admin to transfer tokens", async () => {
+            const amount = 50n;
+            await contract.connect(distributor).distribute(admin.address, amount, actions.subscription);
+
+            const balanceBefore = await contract.balanceOf(secondUser.address);
+            await contract.connect(admin).transfer(secondUser.address, ethers.parseUnits(amount.toString(), 18));
+            const balanceAfter = await contract.balanceOf(secondUser.address);
+
+            expect(balanceAfter - balanceBefore).to.equal(ethers.parseUnits(amount.toString(), 18));
+        });
+    });
+
+    describe("Approvals", () => {
+        it("Should revert any approval attempt", async () => {
+            await expect(
+                contract.connect(firstUser).approve(secondUser.address, 100)
+            ).to.be.revertedWithCustomError(contract, "ApprovalsNotAllowed");
+        });
+    });
 });
