@@ -1,23 +1,54 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.30;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 
 error InsufficientBalance();
 error NonZeroAddress();
 error UserCannotTransferToken();
 error NonZeroValue();
 
-contract Box10 is ERC20, Ownable {
+contract Box10 is ERC20, AccessControl {
+    // Roles
+    bytes32 public constant DISTRIBUTOR_ROLE = keccak256("DISTRIBUTOR_ROLE");
 
+    // Supply
+    uint public constant TOTAL_SUPPLY = 1_000_000_000 * 10**18;
+
+    // Events
     event Distribute(address _to, uint _amount, string _activity);
     event TransferToken(address _from, address _to, uint _amount);
     event MintToken(address _from, address _to, uint _amount);
     event BurnToken(address _from, address _to, uint _amount);
+    event NewDistributorAdded(address _by, address _newDistributor);
+    event DistributorRevoked(address _by, address _distributor);
 
-    constructor(address _owner) ERC20("BOX10 Token", "BOX10") Ownable(_owner) {
-        _mint(address(this), 1000000000 * 10**decimals());
+    constructor(address _admin, address _distributor) ERC20("BOX10 Token", "BOX10") {
+        _grantRole(DEFAULT_ADMIN_ROLE, _admin);
+        _grantRole(DISTRIBUTOR_ROLE, _distributor);
+
+        _mint(address(this), TOTAL_SUPPLY);
+    }
+
+    function addDistributor(address _distributor) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        require(_distributor != address(0), NonZeroAddress());
+
+        _grantRole(DISTRIBUTOR_ROLE, _distributor);
+
+        emit NewDistributorAdded(msg.sender, _distributor);
+    }
+
+    function removeDistributor(address _distributor) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        require(_distributor != address(0), NonZeroAddress());
+
+        revokeRole(DISTRIBUTOR_ROLE, _distributor);
+
+        emit DistributorRevoked(msg.sender, _distributor);
+    }
+
+    function isDistributor(address account) external view returns (bool) {
+        return hasRole(DISTRIBUTOR_ROLE, account);
     }
 
     /*
@@ -26,7 +57,7 @@ contract Box10 is ERC20, Ownable {
      * @param _amount Amount od token to transfer
      * @param _activity Trigger action
      */
-    function distribute(address _to, uint _amount, string calldata _activity) external onlyOwner {
+    function distribute(address _to, uint _amount, string calldata _activity) external onlyRole(DISTRIBUTOR_ROLE) {
         require(_to != address(0), NonZeroAddress());
 
         uint amountInWei = _amount * 10**decimals();
@@ -71,7 +102,7 @@ contract Box10 is ERC20, Ownable {
             return;
         }
         // Transfer
-        require(_from == address(this) || _from == owner(), UserCannotTransferToken());
+        require(_from == address(this) || hasRole(DEFAULT_ADMIN_ROLE, _from), UserCannotTransferToken());
 
         super._update(_from, _to, _amount);
         emit TransferToken(_from, _to, _amount);
