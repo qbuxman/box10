@@ -16,5 +16,9 @@
     "hardhat": "^3.0.14",
     "mocha": "^11.7.5",
     "typescript": "~5.8.0"
+  },
+  "dependencies": {
+    "@nomicfoundation/hardhat-keystore": "^3.0.3",
+    "@nomicfoundation/hardhat-verify": "^3.0.7"
   }
 }
