@@ -6,7 +6,8 @@ const { ethers } = await hre.network.connect();
 
 describe("Box10", function () {
     let contract: any;
-    let deployer: SignerWithAddress;
+    let admin: SignerWithAddress;
+    let distributor: SignerWithAddress;
     let firstUser: SignerWithAddress;
     let secondUser: SignerWithAddress;
     let actions = {
@@ -17,9 +18,9 @@ describe("Box10", function () {
     const zeroAddress = '0x0000000000000000000000000000000000000000';
 
     before(async () => {
-        [deployer, firstUser, secondUser] = await ethers.getSigners();
+        [admin, distributor, firstUser, secondUser] = await ethers.getSigners();
 
-        contract = await ethers.deployContract("Box10", [deployer.address]);
+        contract = await ethers.deployContract("Box10", [admin.address, distributor.address]);
     })
 
     it("Should mint correctly supply of token", async () => {
@@ -29,19 +30,19 @@ describe("Box10", function () {
     });
 
     describe("Distribute", () => {
-        it("Should owner distribute token", async () => {
+        it("Should distributor distribute token", async () => {
             const amount = 100n;
 
-            await contract.connect(deployer).distribute(firstUser.address, amount, actions.subscription);
+            await contract.connect(distributor).distribute(firstUser.address, amount, actions.subscription);
 
             const firstUserBalance: bigint = await contract.balanceOf(firstUser.address);
             expect(firstUserBalance).to.equal(ethers.parseUnits(amount.toString(), 18));
         });
 
-        it("Should ONLY owner distribute token", async () => {
+        it("Should ONLY distributor distribute token", async () => {
             await expect(
                 contract.connect(firstUser).distribute(secondUser.address, 100n, actions.completedQuiz)
-            ).to.be.revertedWithCustomError(contract, "OwnableUnauthorizedAccount");
+            ).to.be.revertedWithCustomError(contract, "AccessControlUnauthorizedAccount");
         });
     });
 
