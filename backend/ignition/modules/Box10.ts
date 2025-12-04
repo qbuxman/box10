@@ -5,7 +5,7 @@ export default buildModule("Box10Module", (m) => {
 
     const distributorWallet = '0x948DB68A78b03aa8399E28Fb4D78D109D33d32CF';
 
-    const box10 = m.contract("Box10", [adminWallet, distributorWallet]);
+    const box10 = m.contract("Box10", [distributorWallet, adminWallet, distributorWallet]);
 
     return { box10 };
 });
