@@ -46,7 +46,7 @@ contract Box10 is ERC20, AccessControl {
         emit NewDistributorAdded(msg.sender, _distributor);
     }
     /*
-     * @dev Remove DEFAULT_ADMIN_ROLE to an address. Only account who has DEFAULT_ADMIN_ROLE role can use it
+     * @dev Remove DISTRIBUTOR_ROLE to an address. Only account who has DISTRIBUTOR_ROLE role can use it
      * @param _distributor Address whose role is deleted
      */
     function removeDistributor(address _distributor) external onlyRole(DEFAULT_ADMIN_ROLE) {
@@ -75,7 +75,7 @@ contract Box10 is ERC20, AccessControl {
     /*
      * @dev Function to send Box10 token to an address (cannot burn or mint)
      * @param _to Address to send token
-     * @param _amount Amount od token to transfer
+     * @param _amount Amount of token to transfer
      * @param _activity Trigger action
      */
     function distribute(address _to, uint _amount, string calldata _activity) external onlyRole(DISTRIBUTOR_ROLE) {
@@ -140,7 +140,8 @@ contract Box10 is ERC20, AccessControl {
         emit TransferToken(_from, _to, _amount);
     }
     /*
-     * @dev Disable approval for everyone
+     * @dev Override _approve to block all approvals except from contract itself
+     * Security : this prevents users from using approve/transferFrom to bypass transfer restrictions
      */
     function _approve(
         address owner,
@@ -148,6 +149,8 @@ contract Box10 is ERC20, AccessControl {
         uint256 value,
         bool emitEvent
     ) internal virtual override {
-        revert ApprovalsNotAllowed();
+        if (owner != address(this)) revert ApprovalsNotAllowed();
+
+        super._approve(owner, spender, value, emitEvent);
     }
 }
