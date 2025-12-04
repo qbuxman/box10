@@ -17,7 +17,7 @@ const NotConnected = () => {
 					<AlertCircleIcon className="h-5 w-5" />
 					<AlertTitle className="text-lg">Attention!</AlertTitle>
 					<AlertDescription className="text-base">
-						Veuillez vous connecter à notre DApp en cliquant sur le bouton "Connect Wallet" en haut à droite.
+						Veuillez vous connecter à notre DApp en cliquant sur le bouton &quot;Connect Wallet&quot; en haut à droite.
 					</AlertDescription>
 				</Alert>
 
@@ -34,7 +34,7 @@ const NotConnected = () => {
 						</li>
 						<li className="flex items-center gap-2">
 							<span className="w-1.5 h-1.5 bg-primary rounded-full"></span>
-							Consulter l'historique des transactions
+							Consulter l&apos;historique des transactions
 						</li>
 					</ul>
 				</div>

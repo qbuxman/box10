@@ -2,7 +2,6 @@
 import { useReadContract, useAccount } from 'wagmi'
 import {CONTRACT_ABI, CONTRACT_ADDRESS} from "@/utils/constants";
 import {useEffect} from "react";
-import {toast} from "sonner";
 import {Card, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 
 const HomePage = () => {
