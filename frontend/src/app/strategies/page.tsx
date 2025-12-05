@@ -8,7 +8,6 @@ const Strategies = () => {
         const response = await fetch('/api/strategies');
         const data = await response.json()
         setStrategies(data);
-        console.log(strategies);
     }
 
     const [strategies, setStrategies] = useState([])
