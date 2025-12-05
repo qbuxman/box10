@@ -1,0 +1,29 @@
+'use client';
+import {useEffect, useState} from "react";
+import StrategyCard from "@/components/shared/StrategyCard";
+import type {Strategy} from "@/types/Strategy";
+
+const Strategies = () => {
+    const fetchData = async () => {
+        const response = await fetch('/api/strategies');
+        const data = await response.json()
+        setStrategies(data);
+        console.log(strategies);
+    }
+
+    const [strategies, setStrategies] = useState([])
+
+    useEffect(() => {
+        fetchData()
+    }, [])
+
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-6">
+            {strategies.map((strategy: Strategy) => (
+                <StrategyCard key={crypto.randomUUID()} strategy={strategy} />
+            ))}
+        </div>
+    )
+}
+
+export default Strategies;
