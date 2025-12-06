@@ -1,5 +1,5 @@
 'use client';
-import { useReadContract, useAccount } from 'wagmi'
+import {useReadContract, useAccount, useWriteContract, useWaitForTransactionReceipt} from 'wagmi'
 import {CONTRACT_ABI, CONTRACT_ADDRESS} from "@/utils/constants";
 import {useEffect} from "react";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
@@ -7,19 +7,8 @@ import {Button} from "@/components/ui/button";
 import {ChartAreaIcon} from "lucide-react";
 import Link from "next/link";
 
+
 const HomePage = () => {
-
-	const { address, isConnected } = useAccount();
-	const { data: balance, error, isPending, refetch } = useReadContract({
-		address: CONTRACT_ADDRESS,
-		abi: CONTRACT_ABI,
-		functionName: 'availableSupply',
-	})
-
-	useEffect(() => {
-		console.log(balance)
-	}, [balance])
-
 	return (
         <div className={'py-6 px-50'}>
             <h1 className={'text-3xl font-bold text-center mb-6'}>👋 Bienvenue dans La Boîte à 10%</h1>
@@ -50,6 +39,11 @@ const HomePage = () => {
             <div className="flex items-center justify-center mt-8">
                 <Link href="/strategies">
                     <Button size="lg" variant="outline" className="!px-12 !py-8 cursor-pointer"><ChartAreaIcon/> Voir les stratégies</Button>
+                </Link>
+            </div>
+            <div>
+                <Link href="/distribute">
+                    <Button size="lg" variant="outline" className="!px-12 !py-8 cursor-pointer"><ChartAreaIcon/> Envoyer des jetons</Button>
                 </Link>
             </div>
         </div>

@@ -5,7 +5,7 @@ const Footer = () => {
 				<div className="flex flex-col md:flex-row items-center justify-between gap-4">
 					<div className="text-center md:text-left">
 						<p className="text-sm text-muted-foreground">
-							&copy; {new Date().getFullYear()} BOX 10. Tous droits réservés.
+							&copy; {new Date().getFullYear()} La boîte à 10%. Tous droits réservés.
 						</p>
 					</div>
 					<div className="flex items-center gap-6">
