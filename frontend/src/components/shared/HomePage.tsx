@@ -1,7 +1,4 @@
 'use client';
-import {useReadContract, useAccount, useWriteContract, useWaitForTransactionReceipt} from 'wagmi'
-import {CONTRACT_ABI, CONTRACT_ADDRESS} from "@/utils/constants";
-import {useEffect} from "react";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import {ChartAreaIcon} from "lucide-react";

@@ -49,7 +49,6 @@ export function ClaimToken({ recipient, amount, activityId }: { recipient: strin
         }
     }
 
-    // @ts-ignore
     return (
         <div className="space-y-4 p-12">
             <input type="text"/>
