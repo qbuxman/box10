@@ -1,12 +1,31 @@
 // lib/distributor.ts
-import {walletClientDistributor} from './viem-server'
-import {publicClient} from "@/utils/client";
-import {CONTRACT_ABI, CONTRACT_ADDRESS} from "@/utils/constants";
+import { publicClient } from "@/utils/client"
+import { CONTRACT_ABI, CONTRACT_ADDRESS } from "@/utils/constants"
+import { createWalletClient, http } from 'viem'
+import { privateKeyToAccount } from 'viem/accounts'
+import { hardhat } from 'viem/chains'
 
 export interface DistributeResult {
     success: boolean
     txHash?: string
     error?: string
+}
+
+// ✅ Fonction helper pour créer le wallet client
+function getWalletClientDistributor() {
+    const privateKey = process.env.DISTRIBUTOR_PRIVATE_KEY
+
+    if (!privateKey) {
+        throw new Error('DISTRIBUTOR_PRIVATE_KEY is not defined')
+    }
+
+    const distributorAccount = privateKeyToAccount(privateKey as `0x${string}`)
+
+    return createWalletClient({
+        account: distributorAccount,
+        chain: hardhat,
+        transport: http()
+    })
 }
 
 export async function distributeRewards(
@@ -15,8 +34,10 @@ export async function distributeRewards(
     activityId: string,
 ): Promise<DistributeResult> {
     try {
+        const walletClientDistributor = getWalletClientDistributor()
+
         console.log('distributeRewards', userAddress, amount, activityId)
-        // 1. Simuler la transaction pour vérifier qu'elle va passer
+
         const { request } = await publicClient.simulateContract({
             address: CONTRACT_ADDRESS,
             abi: CONTRACT_ABI,
@@ -25,10 +46,8 @@ export async function distributeRewards(
             account: walletClientDistributor.account
         })
 
-        // 2. Envoyer la transaction
         const hash = await walletClientDistributor.writeContract(request)
 
-        // 3. Attendre la confirmation
         const receipt = await publicClient.waitForTransactionReceipt({
             hash,
             confirmations: 1
@@ -54,10 +73,10 @@ export async function distributeRewards(
     }
 }
 
-// Helper pour vérifier si le distributeur a le bon rôle
 export async function checkDistributorRole(): Promise<boolean> {
     try {
-        const DISTRIBUTOR_ROLE = '0xfbd454f36a7e1a388bd6fc3ab10d434aa4578f811acbbcf33afb1c697486313c' // Ton role hash
+        const walletClientDistributor = getWalletClientDistributor()
+        const DISTRIBUTOR_ROLE = '0xfbd454f36a7e1a388bd6fc3ab10d434aa4578f811acbbcf33afb1c697486313c'
 
         const hasRole = await publicClient.readContract({
             address: CONTRACT_ADDRESS,

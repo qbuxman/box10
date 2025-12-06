@@ -10,6 +10,8 @@ interface DistributeRequest {
 
 export async function POST(req: NextRequest) {
     try {
+        const { distributeRewards, checkDistributorRole } = await import('@/lib/distributor')
+
         const body: DistributeRequest = await req.json()
         const { userAddress, activityId, rewardAmount } = body
 
@@ -51,3 +53,5 @@ export async function POST(req: NextRequest) {
         )
     }
 }
+
+export const dynamic = 'force-dynamic'
