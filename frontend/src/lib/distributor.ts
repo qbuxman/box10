@@ -1,4 +1,3 @@
-// lib/distributor.ts
 import { publicClient } from "@/utils/client"
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from "@/utils/constants"
 import { createWalletClient, http } from 'viem'
@@ -11,7 +10,7 @@ export interface DistributeResult {
     error?: string
 }
 
-// ✅ Fonction helper pour créer le wallet client
+// Fonction helper pour créer le wallet client (problème de build sur github)
 function getWalletClientDistributor() {
     const privateKey = process.env.DISTRIBUTOR_PRIVATE_KEY
 
@@ -73,16 +72,26 @@ export async function distributeRewards(
     }
 }
 
-export async function checkDistributorRole(): Promise<boolean> {
+export async function checkDistributorRole(userAddress?: `0x${string}`): Promise<boolean> {
     try {
-        const walletClientDistributor = getWalletClientDistributor()
         const DISTRIBUTOR_ROLE = '0xfbd454f36a7e1a388bd6fc3ab10d434aa4578f811acbbcf33afb1c697486313c'
+
+        let addressToCheck: `0x${string}`
+
+        if (userAddress) {
+            // Si une adresse est fournie, on vérifie cette adresse (frontend)
+            addressToCheck = userAddress
+        } else {
+            // Sinon, on utilise le compte distributeur (backend)
+            const walletClientDistributor = getWalletClientDistributor()
+            addressToCheck = walletClientDistributor.account.address
+        }
 
         const hasRole = await publicClient.readContract({
             address: CONTRACT_ADDRESS,
             abi: CONTRACT_ABI,
             functionName: 'hasRole',
-            args: [DISTRIBUTOR_ROLE, walletClientDistributor.account.address]
+            args: [DISTRIBUTOR_ROLE, addressToCheck]
         })
 
         return hasRole as boolean

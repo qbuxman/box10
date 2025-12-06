@@ -1,13 +1,31 @@
 'use client';
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
-import {ChartAreaIcon} from "lucide-react";
+import {BadgeDollarSign, ChartAreaIcon, GraduationCap, Lightbulb} from "lucide-react";
 import Link from "next/link";
+import {useEffect, useState} from "react";
+import {useAccount} from "wagmi";
+import {checkDistributorRole} from "@/lib/distributor";
 
 
 const HomePage = () => {
+    const { address, isConnected } = useAccount()
+
+    const [isDistributor, setIsDistributor] = useState(false)
+
+    useEffect(() => {
+        const checkIfUserConnectedRole = async () => {
+            if (address && isConnected) {
+                const result = await checkDistributorRole(address)
+                setIsDistributor(result)
+            }
+        }
+
+        checkIfUserConnectedRole()
+    }, [isConnected, address])
+
 	return (
-        <div className={'py-6 px-50'}>
+        <div>
             <h1 className={'text-3xl font-bold text-center mb-6'}>👋 Bienvenue dans La Boîte à 10%</h1>
             <Card className={'mb-6'}>
                 <CardHeader>
@@ -33,15 +51,23 @@ const HomePage = () => {
                     </CardContent>
                 </Card>
             </div>
-            <div className="flex items-center justify-center mt-8">
+            <div className="flex items-center justify-center mt-8 gap-4">
                 <Link href="/strategies">
-                    <Button size="lg" variant="outline" className="!px-12 !py-8 cursor-pointer"><ChartAreaIcon/> Voir les stratégies</Button>
+                    <Button size="lg" variant="outline" className="!px-8 !py-6 cursor-pointer"><ChartAreaIcon/> Voir les stratégies</Button>
                 </Link>
-            </div>
-            <div>
-                <Link href="/distribute">
-                    <Button size="lg" variant="outline" className="!px-12 !py-8 cursor-pointer"><ChartAreaIcon/> Envoyer des jetons</Button>
+                <Link href="/learn">
+                    <Button size="lg" variant="outline" className="!px-8 !py-6 cursor-pointer"><GraduationCap/>Se former</Button>
                 </Link>
+                <Link href="/quiz">
+                    <Button size="lg" variant="outline" className="!px-8 !py-6 cursor-pointer"><Lightbulb/>Tester ses connaissances</Button>
+                </Link>
+                {isDistributor ? (
+                    <div>
+                        <Link href="/distribute">
+                            <Button size="lg" variant="outline" className="!px-8 !py-6 cursor-pointer"><BadgeDollarSign/> Envoyer des jetons</Button>
+                        </Link>
+                    </div>
+                ) : ''}
             </div>
         </div>
 	)

@@ -8,9 +8,6 @@ export function ClaimToken({ recipient, amount, activityId }: { recipient: strin
     const [loading, setLoading] = useState(false)
     const [result, setResult] = useState(null)
 
-    console.log('claimToken', activityId)
-    console.log('address', address)
-
     const handleComplete = async () => {
         if (!address) {
             alert('Please connect your wallet')

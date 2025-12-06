@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { distributeRewards, checkDistributorRole } from '@/lib/distributor'
 import { isAddress } from 'viem'
 
 interface DistributeRequest {

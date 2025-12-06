@@ -17,11 +17,15 @@ const Strategies = () => {
     }, [])
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-6">
-            {strategies.map((strategy: Strategy) => (
-                <StrategyCard key={crypto.randomUUID()} strategy={strategy} />
-            ))}
-        </div>
+        <>
+            <h1 className={'text-3xl font-bold text-center mb-6'}>📈 Les stratégies</h1>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-6">
+                {strategies.map((strategy: Strategy) => (
+                    <StrategyCard key={crypto.randomUUID()} strategy={strategy} />
+                ))}
+            </div>
+        </>
+
     )
 }
 
