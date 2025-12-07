@@ -4,7 +4,7 @@ import {toast} from "sonner";
 import {Gift, Loader} from "lucide-react";
 import {Lesson} from "@/types/Lesson";
 import {Button} from "@/components/ui/button";
-import {useAccount, useClient} from "wagmi";
+import {useAccount} from "wagmi";
 import {claimToken} from "@/utils/claimToken";
 
 const LearnExchangeCategory = () => {

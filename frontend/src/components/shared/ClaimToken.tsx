@@ -20,7 +20,7 @@ export function ClaimToken() {
     const [recipientForBoxToken, setRecipientForBoxToken] = useState('')
     const [amountToSend, setAmountToSend] = useState<number>(0)
     const [activityId, setActivityId] = useState('')
-    const { data: balance, error, isPending, refetch } = useReadContract({
+    const { data: balance } = useReadContract({
         address: CONTRACT_ADDRESS,
         abi: CONTRACT_ABI,
         functionName: 'availableSupply'

@@ -1,7 +1,4 @@
 'use client'
-import ClaimToken from "@/components/shared/ClaimToken";
-import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
-import {AlertCircleIcon} from "lucide-react";
 import {useAccount} from "wagmi";
 import {useEffect, useState} from "react";
 import {checkAdminRole} from "@/lib/admin";

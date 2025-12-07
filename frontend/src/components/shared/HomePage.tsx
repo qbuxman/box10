@@ -23,14 +23,13 @@ const HomePage = () => {
 
                 const isDistributor_ = await checkDistributorRole(address)
                 setIsDistributor(isDistributor_)
+            } else {
+                setIsAdmin(false)
+                setIsDistributor(false)
             }
         }
 
         if (isConnected) checkConnectedUserRoles()
-        else {
-            setIsAdmin(false)
-            setIsDistributor(false)
-        }
     }, [isConnected, address])
 
 	return (
