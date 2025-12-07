@@ -16,7 +16,7 @@ const HomePage = () => {
 
     useEffect(() => {
         const checkConnectedUserRoles = async () => {
-            if (address) {
+            if (address && isConnected) {
                 const isAdmin_ = await checkAdminRole(address)
                 setIsAdmin(isAdmin_)
 
@@ -28,7 +28,7 @@ const HomePage = () => {
             }
         }
 
-        if (isConnected) checkConnectedUserRoles()
+        checkConnectedUserRoles()
     }, [isConnected, address])
 
 	return (
