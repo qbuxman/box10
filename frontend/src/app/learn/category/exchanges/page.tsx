@@ -4,8 +4,10 @@ import {toast} from "sonner";
 import {Gift, Loader} from "lucide-react";
 import {Lesson} from "@/types/Lesson";
 import {Button} from "@/components/ui/button";
+import {useAccount, useClient} from "wagmi";
 
 const LearnExchangeCategory = () => {
+    const { isConnected } = useAccount()
     const [lesson, setLesson] = useState<Lesson | null>(null)
     const [isLoading, setIsLoading] = useState(false)
     const [isClaim, setIsClaim] = useState(false)
@@ -50,13 +52,13 @@ const LearnExchangeCategory = () => {
                         dangerouslySetInnerHTML={{ __html: lesson?.content as string }}
                     />
 
-                    {lesson ? (
-                        <div className="flex justify-center py-8">
+                    {isConnected && lesson ? (
+                        <div className="flex justify-center mt-8">
                             <Button
                                 onClick={claimToken}
                                 variant="outline"
                                 disabled={isClaim}
-                                className="mb-4 bg-sky-500 hover:bg-sky-400 cursor-pointer text-white hover:text-white "
+                                className="bg-sky-500 hover:bg-sky-400 cursor-pointer text-white hover:text-white "
                             >
                                 {isClaim ?
                                     (<><Loader className="animate-spin"/> Récupération de la récompense...</>) :
