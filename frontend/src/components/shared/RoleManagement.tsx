@@ -3,7 +3,13 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import { checkDistributorRole } from "@/lib/roles"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { UserPlus, Shield } from "lucide-react"
 
 const RoleManagement = () => {
@@ -62,13 +68,16 @@ const RoleManagement = () => {
     <div className="max-w-4xl mx-auto p-6 space-y-8">
       {/* Header */}
       <div className="text-center space-y-2">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4" style={{ backgroundColor: '#234C6A' }}>
+        <div
+          className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4"
+          style={{ backgroundColor: "#234C6A" }}
+        >
           <Shield className="w-8 h-8 text-white" />
         </div>
-        <h1 className="text-4xl font-bold" style={{ color: '#234C6A' }}>
+        <h1 className="text-4xl font-bold" style={{ color: "#234C6A" }}>
           Gestion des rôles
         </h1>
-        <p className="text-lg" style={{ color: '#456882' }}>
+        <p className="text-lg" style={{ color: "#456882" }}>
           Administrez les permissions du système de distribution
         </p>
       </div>
@@ -93,7 +102,7 @@ const RoleManagement = () => {
             <label
               htmlFor="address-input"
               className="text-sm font-medium"
-              style={{ color: '#234C6A' }}
+              style={{ color: "#234C6A" }}
             >
               Adresse Ethereum
             </label>
@@ -104,8 +113,8 @@ const RoleManagement = () => {
               placeholder="0x..."
               className="border-2"
               style={{
-                borderColor: '#E3E3E3',
-                color: '#234C6A'
+                borderColor: "#E3E3E3",
+                color: "#234C6A",
               }}
             />
           </div>
@@ -114,7 +123,7 @@ const RoleManagement = () => {
             onClick={addRoleToAddress}
             className="w-full text-white font-medium transition-all hover:opacity-90 cursor-pointer"
             style={{
-              backgroundColor: '#456882',
+              backgroundColor: "#456882",
             }}
           >
             {isLoading ? (
@@ -133,14 +142,12 @@ const RoleManagement = () => {
       </Card>
 
       {/* Placeholder for future "Remove Role" section */}
-      <Card className="border-2 opacity-60" style={{ borderColor: '#E3E3E3' }}>
+      <Card className="border-2 opacity-60" style={{ borderColor: "#E3E3E3" }}>
         <CardHeader>
-          <CardTitle style={{ color: '#456882' }}>
+          <CardTitle style={{ color: "#456882" }}>
             Retirer le rôle Distributeur
           </CardTitle>
-          <CardDescription>
-            Disponible prochainement
-          </CardDescription>
+          <CardDescription>Disponible prochainement</CardDescription>
         </CardHeader>
       </Card>
     </div>

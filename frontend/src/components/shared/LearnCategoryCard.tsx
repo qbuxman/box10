@@ -8,17 +8,27 @@ const LearnCategoryCard = ({
   learnCategory: LearnCategory
 }) => {
   return (
-    <Card className="hover:scale-105 transition duration-200 cursor-pointer h-full">
+    <Card
+      className="hover:scale-[1.02] transition-transform duration-200 cursor-pointer h-full border-2"
+      style={{ borderColor: "#E3E3E3" }}
+    >
       <CardHeader>
-        <CardTitle>
-          {learnCategory.icon} {learnCategory.title}
+        <CardTitle className="flex items-center gap-2 text-[#234C6A]">
+          <span>{learnCategory.icon}</span>
+          <span>{learnCategory.title}</span>
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <p>{learnCategory.description}</p>
-        <div className="flex items-center gap-2">
+      <CardContent className="space-y-4">
+        <p className="text-sm" style={{ color: "#456882" }}>
+          {learnCategory.description}
+        </p>
+        <div className="flex flex-wrap items-center gap-2">
           {learnCategory.families.map((family) => (
-            <Badge key={crypto.randomUUID()} variant="secondary">
+            <Badge
+              key={crypto.randomUUID()}
+              variant="secondary"
+              className="bg-[#E3E3E3] text-[#234C6A] hover:bg-[#E3E3E3]"
+            >
               {family.label}
             </Badge>
           ))}
