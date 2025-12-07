@@ -1,29 +1,36 @@
 'use client';
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
-import {BadgeDollarSign, ChartAreaIcon, GraduationCap, Lightbulb} from "lucide-react";
+import {BadgeDollarSign, ChartAreaIcon, GraduationCap, Lightbulb, LockOpen} from "lucide-react";
 import Link from "next/link";
 import {useEffect, useState} from "react";
 import {useAccount} from "wagmi";
 import {checkDistributorRole} from "@/lib/distributor";
+import {checkAdminRole} from "@/lib/admin";
 
 
 const HomePage = () => {
     const { address, isConnected } = useAccount()
 
     const [isDistributor, setIsDistributor] = useState(false)
+    const [isAdmin, setIsAdmin] = useState(false)
 
     useEffect(() => {
-        const checkIfUserConnectedRole = async () => {
-            if (address && isConnected) {
-                const result = await checkDistributorRole(address)
-                setIsDistributor(result)
-            } else {
-                setIsDistributor(false)
+        const checkConnectedUserRoles = async () => {
+            if (address) {
+                const isAdmin_ = await checkAdminRole(address)
+                setIsAdmin(isAdmin_)
+
+                const isDistributor_ = await checkDistributorRole(address)
+                setIsDistributor(isDistributor_)
             }
         }
 
-        checkIfUserConnectedRole()
+        if (isConnected) checkConnectedUserRoles()
+        else {
+            setIsAdmin(false)
+            setIsDistributor(false)
+        }
     }, [isConnected, address])
 
 	return (
@@ -67,6 +74,13 @@ const HomePage = () => {
                     <div>
                         <Link href="/distribute">
                             <Button size="lg" variant="outline" className="!px-8 !py-6 cursor-pointer"><BadgeDollarSign/> Envoyer des jetons</Button>
+                        </Link>
+                    </div>
+                ) : ''}
+                {isAdmin ? (
+                    <div>
+                        <Link href="/admin/settings/roles">
+                            <Button size="lg" variant="outline" className="!px-8 !py-6 cursor-pointer"><LockOpen/> Gestion des rôles</Button>
                         </Link>
                     </div>
                 ) : ''}

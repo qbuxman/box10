@@ -1,6 +1,6 @@
 import { publicClient } from "@/utils/client"
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from "@/utils/constants"
-import { createWalletClient, http } from 'viem'
+import { createWalletClient, http, keccak256, toBytes } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { hardhat } from 'viem/chains'
 
@@ -15,7 +15,7 @@ function getWalletClientDistributor() {
     const privateKey = process.env.DISTRIBUTOR_PRIVATE_KEY
 
     if (!privateKey) {
-        throw new Error('DISTRIBUTOR_PRIVATE_KEY is not defined')
+        throw new Error('DISTRIBUTOR_PRIVATE_KEY n\'existe pas')
     }
 
     const distributorAccount = privateKeyToAccount(privateKey as `0x${string}`)
@@ -34,8 +34,6 @@ export async function distributeRewards(
 ): Promise<DistributeResult> {
     try {
         const walletClientDistributor = getWalletClientDistributor()
-
-        console.log('distributeRewards', userAddress, amount, activityId)
 
         const { request } = await publicClient.simulateContract({
             address: CONTRACT_ADDRESS,
@@ -60,21 +58,21 @@ export async function distributeRewards(
         } else {
             return {
                 success: false,
-                error: 'Transaction failed'
+                error: 'Echec de la transaction'
             }
         }
     } catch (error: any) {
-        console.error('Distribution error:', error)
+        console.error('Une erreur est survenue :', error)
         return {
             success: false,
-            error: error.message || 'Unknown error'
+            error: error.message || 'Erreur inconnue'
         }
     }
 }
 
 export async function checkDistributorRole(userAddress?: `0x${string}`): Promise<boolean> {
     try {
-        const DISTRIBUTOR_ROLE = '0xfbd454f36a7e1a388bd6fc3ab10d434aa4578f811acbbcf33afb1c697486313c'
+        const DISTRIBUTOR_ROLE = keccak256(toBytes('DISTRIBUTOR_ROLE'))
 
         let addressToCheck: `0x${string}`
 
@@ -96,7 +94,7 @@ export async function checkDistributorRole(userAddress?: `0x${string}`): Promise
 
         return hasRole as boolean
     } catch (error) {
-        console.error('Error checking role:', error)
+        console.error('Une erreur est survenue :', error)
         return false
     }
 }
