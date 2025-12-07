@@ -5,9 +5,10 @@ import {Gift, Loader} from "lucide-react";
 import {Lesson} from "@/types/Lesson";
 import {Button} from "@/components/ui/button";
 import {useAccount, useClient} from "wagmi";
+import {claimToken} from "@/utils/claimToken";
 
 const LearnExchangeCategory = () => {
-    const { isConnected } = useAccount()
+    const { isConnected, address } = useAccount()
     const [lesson, setLesson] = useState<Lesson | null>(null)
     const [isLoading, setIsLoading] = useState(false)
     const [isClaim, setIsClaim] = useState(false)
@@ -29,12 +30,20 @@ const LearnExchangeCategory = () => {
         getLesson()
     }, [])
 
-    const claimToken = async () => {
+    const claimTokenForLesson = async () => {
+        if (!address) {
+            toast.error('Veuillez vous connecter pour recevoir votre récompense.')
+            return
+        }
+
         setIsClaim(true)
-        setTimeout(() => {
-            toast.success("Leçon terminée !")
-            setIsClaim(false)
-        }, 3000)
+
+        await claimToken(address, 10, 'blockchain-lesson')
+            .then((response) => {
+                if (response.success) {
+                    toast.success("Leçon terminée ! Vous avez gagné 10 BOX10 !")
+                }
+            }).finally(() => setIsClaim(false))
     }
 
     return (
@@ -55,7 +64,7 @@ const LearnExchangeCategory = () => {
                     {isConnected && lesson ? (
                         <div className="flex justify-center mt-8">
                             <Button
-                                onClick={claimToken}
+                                onClick={claimTokenForLesson}
                                 variant="outline"
                                 disabled={isClaim}
                                 className="bg-sky-500 hover:bg-sky-400 cursor-pointer text-white hover:text-white "
