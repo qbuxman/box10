@@ -1,7 +1,5 @@
 const QuizPage = () => {
-    return (
-        <div>Quizz</div>
-    )
+  return <div>Quizz</div>
 }
 
-export default QuizPage;
+export default QuizPage

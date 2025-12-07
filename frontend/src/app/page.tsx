@@ -1,10 +1,10 @@
-'use client';
-import HomePage from "@/components/shared/HomePage";
+"use client"
+import HomePage from "@/components/shared/HomePage"
 
 export default function Home() {
   return (
-	  <div>
-          <HomePage />
-	  </div>
+    <div>
+      <HomePage />
+    </div>
   )
 }
