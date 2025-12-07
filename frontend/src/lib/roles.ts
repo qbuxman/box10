@@ -110,25 +110,13 @@ export interface AddRoleResult {
 
 // Fonction helper pour créer le wallet client (problème de build sur github)
 function getWalletClientAdmin() {
-  console.log(
-    "🔍 Debug - Toutes les variables env:",
-    Object.keys(process.env).filter((k) => k.includes("ADMIN"))
-  )
-  console.log(
-    "🔍 Debug - ADMIN_PRIVATE_KEY présente:",
-    !!process.env.ADMIN_PRIVATE_KEY
-  )
-
   const privateKey = process.env.ADMIN_PRIVATE_KEY
 
   if (!privateKey) {
-    console.error("❌ ADMIN_PRIVATE_KEY est undefined")
     throw new Error(
       "ADMIN_PRIVATE_KEY n'existe pas dans les variables d'environnement"
     )
   }
-
-  console.log("✅ ADMIN_PRIVATE_KEY trouvée")
 
   const adminAccount = privateKeyToAccount(privateKey as `0x${string}`)
 
@@ -139,13 +127,6 @@ function getWalletClientAdmin() {
   })
 }
 
-/**
- * Ajoute le rôle DISTRIBUTOR à une adresse
- * IMPORTANT: Cette fonction doit être appelée UNIQUEMENT côté serveur (API route)
- * car elle utilise la clé privée de l'admin
- * @param userAddress - Adresse à qui ajouter le rôle
- * @returns Résultat de l'opération avec le hash de la transaction si succès
- */
 export async function addDistributorRole(
   userAddress: `0x${string}`
 ): Promise<AddRoleResult> {

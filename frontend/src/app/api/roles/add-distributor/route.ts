@@ -8,12 +8,6 @@ interface AddDistributorRequest {
 
 export async function POST(req: NextRequest) {
   try {
-    // Debug: vérifier que la variable d'environnement est accessible
-    console.log(
-      "ADMIN_PRIVATE_KEY disponible:",
-      !!process.env.ADMIN_PRIVATE_KEY
-    )
-
     const body: AddDistributorRequest = await req.json()
     const { userAddress } = body
 
