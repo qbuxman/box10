@@ -18,6 +18,8 @@ const HomePage = () => {
             if (address && isConnected) {
                 const result = await checkDistributorRole(address)
                 setIsDistributor(result)
+            } else {
+                setIsDistributor(false)
             }
         }
 
@@ -39,7 +41,7 @@ const HomePage = () => {
                         <CardTitle>👉 Vous avez des USDC ?</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p>Utilisez-les directement dans la dApp.</p>
+                        <p>Utilisez-les dès maintenant !</p>
                     </CardContent>
                 </Card>
                 <Card className="hover:scale-105 transition duration-500 cursor-pointer">

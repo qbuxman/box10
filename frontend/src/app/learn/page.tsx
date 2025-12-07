@@ -4,6 +4,7 @@ import {useEffect, useState} from "react";
 import {toast} from "sonner";
 import {LearnCategory} from "@/types/LearnCategory";
 import LearnCategoryCard from "@/components/shared/LearnCategoryCard";
+import Link from "next/link";
 
 const LearnPage = () => {
     const [learnCategories, setLearnCategories] = useState([])
@@ -36,7 +37,9 @@ const LearnPage = () => {
                 <div className="p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {learnCategories.map((category: LearnCategory) => (
                         <div key={crypto.randomUUID()}>
-                            <LearnCategoryCard learnCategory={category}/>
+                            <Link href={`/learn/category/${category.path}`}>
+                                <LearnCategoryCard learnCategory={category}/>
+                            </Link>
                         </div>
                     ))}
                 </div>

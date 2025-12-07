@@ -3,6 +3,7 @@ export type LearnCategory = {
     title: string
     description: string
     families: Family[]
+    path?: string
     icon?: string
 }
 
