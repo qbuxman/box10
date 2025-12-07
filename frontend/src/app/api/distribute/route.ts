@@ -9,7 +9,7 @@ interface DistributeRequest {
 
 export async function POST(req: NextRequest) {
     try {
-        const { distributeRewards, checkDistributorRole } = await import('@/lib/distributor')
+        const { distributeRewards } = await import('@/lib/distributor')
 
         const body: DistributeRequest = await req.json()
         const { userAddress, activityId, rewardAmount } = body
@@ -18,14 +18,6 @@ export async function POST(req: NextRequest) {
             return NextResponse.json(
                 { error: 'Invalid user address' },
                 { status: 400 }
-            )
-        }
-
-        const hasRole = await checkDistributorRole()
-        if (!hasRole) {
-            return NextResponse.json(
-                { error: 'Distributor does not have required role' },
-                { status: 403 }
             )
         }
 

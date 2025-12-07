@@ -2,7 +2,7 @@
 import ClaimToken from "@/components/shared/ClaimToken";
 import {useAccount} from "wagmi";
 import {useEffect, useState} from "react";
-import {checkDistributorRole} from "@/lib/distributor";
+import {checkDistributorRole} from "@/lib/roles";
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {AlertCircleIcon} from "lucide-react";
 

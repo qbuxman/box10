@@ -1,7 +1,7 @@
 'use client'
 import {useAccount} from "wagmi";
 import {useEffect, useState} from "react";
-import {checkAdminRole} from "@/lib/admin";
+import {checkAdminRole} from "@/lib/roles";
 import Unauthorized from "@/components/shared/Unauthorized";
 import RoleManagement from "@/components/shared/RoleManagement";
 

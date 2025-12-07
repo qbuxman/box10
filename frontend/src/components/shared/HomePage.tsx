@@ -5,8 +5,7 @@ import {BadgeDollarSign, ChartAreaIcon, GraduationCap, Lightbulb, LockOpen} from
 import Link from "next/link";
 import {useEffect, useState} from "react";
 import {useAccount} from "wagmi";
-import {checkDistributorRole} from "@/lib/distributor";
-import {checkAdminRole} from "@/lib/admin";
+import {checkDistributorRole, checkAdminRole} from "@/lib/roles";
 
 
 const HomePage = () => {
