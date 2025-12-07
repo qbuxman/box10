@@ -28,7 +28,12 @@ export default function RootLayout({
         <RainbowKitAndWagmiProvider>
           <Layout>
             {children}
-            <Toaster />
+            <Toaster
+              position="top-right"
+              theme="light"
+              expand={true}
+              richColors={true}
+            />
           </Layout>
         </RainbowKitAndWagmiProvider>
       </body>
