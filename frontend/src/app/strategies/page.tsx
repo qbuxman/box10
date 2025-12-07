@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react"
 import StrategyCard from "@/components/shared/StrategyCard"
 import type { Strategy } from "@/types/Strategy"
+import {ChartLine} from "lucide-react";
 
 const Strategies = () => {
   const [strategies, setStrategies] = useState<Strategy[]>([])
@@ -29,15 +30,14 @@ const Strategies = () => {
       {/* Header */}
       <div className="text-center space-y-2">
         <div
-          className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4"
-          style={{ backgroundColor: "#234C6A" }}
+          className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 bg-[#234C6A]"
         >
-          <span className="text-white text-2xl">📈</span>
+          <span className="text-white text-2xl"><ChartLine/></span>
         </div>
-        <h1 className="text-4xl font-bold" style={{ color: "#234C6A" }}>
+        <h1 className="text-4xl font-bold text-[#234C6A]">
           Les stratégies
         </h1>
-        <p className="text-lg" style={{ color: "#456882" }}>
+        <p className="text-lg text-[#456882]">
           Découvrez nos stratégies disponibles
         </p>
       </div>
