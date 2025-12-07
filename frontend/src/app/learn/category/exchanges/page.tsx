@@ -1,12 +1,14 @@
 'use client';
 import {useEffect, useState} from "react";
 import {toast} from "sonner";
-import {Loader} from "lucide-react";
+import {Gift, Loader} from "lucide-react";
 import {Lesson} from "@/types/Lesson";
+import {Button} from "@/components/ui/button";
 
 const LearnExchangeCategory = () => {
     const [lesson, setLesson] = useState<Lesson | null>(null)
-    const [isLoading, setIsLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState(false)
+    const [isClaim, setIsClaim] = useState(false)
 
     useEffect(() => {
         const getLesson = async () => {
@@ -25,6 +27,14 @@ const LearnExchangeCategory = () => {
         getLesson()
     }, [])
 
+    const claimToken = async () => {
+        setIsClaim(true)
+        setTimeout(() => {
+            toast.success("Leçon terminée !")
+            setIsClaim(false)
+        }, 3000)
+    }
+
     return (
         <div>
             <h1 className={'text-3xl font-bold text-center mb-6'}>{ lesson?.title }</h1>
@@ -39,6 +49,22 @@ const LearnExchangeCategory = () => {
                         className="whitespace-pre-wrap"
                         dangerouslySetInnerHTML={{ __html: lesson?.content as string }}
                     />
+
+                    {lesson ? (
+                        <div className="flex justify-center py-8">
+                            <Button
+                                onClick={claimToken}
+                                variant="outline"
+                                disabled={isClaim}
+                                className="mb-4 bg-sky-500 hover:bg-sky-400 cursor-pointer text-white hover:text-white "
+                            >
+                                {isClaim ?
+                                    (<><Loader className="animate-spin"/> Récupération de la récompense...</>) :
+                                    (<><Gift /> J'ai terminé ce cours</>)
+                                }
+                            </Button>
+                        </div>
+                    ) : ''}
                 </div>
             )}
         </div>
