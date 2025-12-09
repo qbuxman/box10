@@ -21,7 +21,7 @@ describe("Box10", function () {
     before(async () => {
         [admin, criticalDistributor, distributor, firstUser, secondUser] = await ethers.getSigners();
 
-        contract = await ethers.deployContract("Box10", [admin.address, criticalDistributor, distributor.address]);
+        contract = await ethers.deployContract("Box10", [admin.address, criticalDistributor.address, distributor.address]);
     })
 
     it("Should mint correctly supply of token", async () => {
@@ -43,7 +43,13 @@ describe("Box10", function () {
         it("Should ONLY distributor distribute token", async () => {
             await expect(
                 contract.connect(firstUser).distribute(secondUser.address, 100n, actions.completedQuiz)
-            ).to.be.revertedWithCustomError(contract, "AccessControlUnauthorizedAccount");
+            ).to.be.revertedWithCustomError(contract, "OnlyDistributorOrCriticalDistributor");
+        });
+
+        it("Should ONLY critical distributor distribute token if amount is superior to threshold", async () => {
+            await expect(
+                contract.connect(distributor).distribute(secondUser.address, 1001n, actions.completedQuiz)
+            ).to.be.revertedWithCustomError(contract, "OnlyCriticalDistributor");
         });
 
         it("Should revert if trying to distribute to zero address", async () => {
@@ -55,7 +61,7 @@ describe("Box10", function () {
         it("Should revert if insufficient balance in contract", async () => {
             const hugeAmount = 2000000000n;
             await expect(
-                contract.connect(distributor).distribute(secondUser.address, hugeAmount, actions.subscription)
+                contract.connect(criticalDistributor).distribute(secondUser.address, hugeAmount, actions.subscription)
             ).to.be.revertedWithCustomError(contract, "InsufficientBalance");
         });
     });
@@ -159,7 +165,33 @@ describe("Box10", function () {
         it("Should revert any approval attempt", async () => {
             await expect(
                 contract.connect(firstUser).approve(secondUser.address, 100)
-            ).to.be.revertedWithCustomError(contract, "ApprovalsNotAllowed");
+            ).revertedWithCustomError(contract, "ApprovalsNotAllowed");
+        });
+    });
+
+    describe("Pause", () => {
+        it("Should revert if other role than DEFAULT_ADMIN_ROLE call function", async () => {
+            await expect(contract.connect(firstUser).pause())
+                .revertedWithCustomError(contract, "AccessControlUnauthorizedAccount");
+        });
+
+        it("Should revert if function called when contract is already in pause", async () => {
+            await expect(contract.connect(admin).pause())
+                .emit(contract, "Paused");
+            await expect(contract.connect(admin).pause())
+                .revertedWithCustomError(contract, "EnforcedPause");
+        });
+    });
+
+    describe("Unpause", () => {
+        it("Should revert if other role than DEFAULT_ADMIN_ROLE call function", async () => {
+            await expect(contract.connect(firstUser).unpause())
+                .revertedWithCustomError(contract, "AccessControlUnauthorizedAccount");
+        });
+
+        it("Should revert if function called when contract is not in pause", async () => {
+            await expect(contract.connect(admin).unpause()).emit(contract, "Unpaused");
+            await expect(contract.connect(admin).unpause()).revertedWithCustomError(contract, "ExpectedPause");
         });
     });
 });

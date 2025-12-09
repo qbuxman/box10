@@ -1,23 +1,28 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.30;
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
 
 // Errors
 error InsufficientBalance();
 error NonZeroAddress();
 error UserCannotTransferToken();
 error NonZeroValue();
+error InvalidActivity();
 error ApprovalsNotAllowed();
+error OnlyCriticalDistributor();
+error OnlyDistributorOrCriticalDistributor();
 
-contract Box10 is ERC20, AccessControl {
+contract Box10 is ERC20, AccessControl, Pausable {
     // Roles
     bytes32 public constant DISTRIBUTOR_ROLE = keccak256("DISTRIBUTOR_ROLE");
     bytes32 public constant CRITICAL_DISTRIBUTOR_ROLE = keccak256("CRITICAL_DISTRIBUTOR_ROLE");
 
     // Supply
     uint public constant TOTAL_SUPPLY = 1_000_000_000 * 10**18;
+    uint public constant LARGE_DISTRIBUTION_THRESHOLD = 1000 * 10**18;
 
     // Events
     event Distribute(address _to, uint _amount, string _activity);
@@ -33,6 +38,19 @@ contract Box10 is ERC20, AccessControl {
         _grantRole(DISTRIBUTOR_ROLE, _distributor);
 
         _mint(address(this), TOTAL_SUPPLY);
+    }
+    // Modifier
+    modifier onlyDistributorOrCritical(uint _amount) {
+        uint amountInWei = _amount * 10**decimals();
+
+        // If _amount > distribution threshold, require CRITICAL_DISTRIBUTOR_ROLE role
+        if (amountInWei > LARGE_DISTRIBUTION_THRESHOLD && !hasRole(CRITICAL_DISTRIBUTOR_ROLE, msg.sender)) {
+            revert OnlyCriticalDistributor();
+        } else if (!hasRole(DISTRIBUTOR_ROLE, msg.sender) && !hasRole(CRITICAL_DISTRIBUTOR_ROLE, msg.sender)) {
+            // if _amount <= distribution threshold, DISTRIBUTOR_ROLE is enough
+            revert OnlyDistributorOrCriticalDistributor();
+        }
+        _;
     }
     /*
      * @dev Add DISTRIBUTOR_ROLE to an address. Only account who has DEFAULT_ADMIN_ROLE role can use it
@@ -78,8 +96,9 @@ contract Box10 is ERC20, AccessControl {
      * @param _amount Amount of token to transfer
      * @param _activity Trigger action
      */
-    function distribute(address _to, uint _amount, string calldata _activity) external onlyRole(DISTRIBUTOR_ROLE) {
+    function distribute(address _to, uint _amount, string calldata _activity) external onlyDistributorOrCritical(_amount) whenNotPaused {
         if (_to == address(0)) revert NonZeroAddress();
+        if (bytes(_activity).length == 0) revert InvalidActivity();
 
         uint amountInWei = _amount * 10**decimals();
 
@@ -113,7 +132,7 @@ contract Box10 is ERC20, AccessControl {
      * @param _to
      * @param _amount
      */
-    function _update(address _from, address _to, uint256 _amount) internal virtual override {
+    function _update(address _from, address _to, uint256 _amount) internal virtual override whenNotPaused {
         if (_amount == 0) revert NonZeroValue();
 
         // Mint
@@ -152,5 +171,13 @@ contract Box10 is ERC20, AccessControl {
         if (owner != address(this)) revert ApprovalsNotAllowed();
 
         super._approve(owner, spender, value, emitEvent);
+    }
+
+    function pause() external onlyRole(DEFAULT_ADMIN_ROLE) whenNotPaused {
+        _pause();
+    }
+
+    function unpause() external onlyRole(DEFAULT_ADMIN_ROLE) whenPaused {
+        _unpause();
     }
 }
