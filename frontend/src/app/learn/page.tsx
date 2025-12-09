@@ -4,7 +4,7 @@ import { toast } from "sonner"
 import { LearnCategory } from "@/types/LearnCategory"
 import LearnCategoryCard from "@/components/shared/LearnCategoryCard"
 import Link from "next/link"
-import {GraduationCap} from "lucide-react";
+import { GraduationCap } from "lucide-react"
 
 const LearnPage = () => {
   const [learnCategories, setLearnCategories] = useState<LearnCategory[]>([])
@@ -37,7 +37,9 @@ const LearnPage = () => {
           className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4"
           style={{ backgroundColor: "#234C6A" }}
         >
-          <span className="text-white text-2xl"><GraduationCap/></span>
+          <span className="text-white text-2xl">
+            <GraduationCap />
+          </span>
         </div>
         <h1 className="text-4xl font-bold" style={{ color: "#234C6A" }}>
           Les formations

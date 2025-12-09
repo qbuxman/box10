@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
-import {checkDistributorRole, removeDistributorRole} from "@/lib/roles"
+import { checkDistributorRole } from "@/lib/roles"
 import {
   Card,
   CardContent,
@@ -64,52 +64,52 @@ const RoleManagement = () => {
     }
   }
 
-    const removeRoleToAddress = async () => {
-        if (!addressToRemoveRole) {
-            toast.error("Merci de renseigner une adresse.")
-            return
-        }
-
-        setIsLoading(true)
-
-        try {
-            // Vérifier que l'adresse renseignée n'a pas déjà le rôle de distributeur
-            const hasRole = await checkDistributorRole(
-                addressToRemoveRole as `0x${string}`
-            )
-
-            if (!hasRole) {
-                toast.warning("Cette adresse n'a pas ce rôle.")
-                setIsLoading(false)
-                return
-            }
-
-            // Appeler l'API route pour ajouter le rôle (côté serveur)
-            const response = await fetch("/api/roles/remove-distributor", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ userAddress: addressToRemoveRole }),
-            })
-
-            const data = await response.json()
-
-            if (data.success) {
-                toast.success(
-                    `Rôle de distributeur ajouté avec succès pour l'adresse ${addressToRemoveRole}`
-                )
-                toast.info(`Transaction: ${data.txHash}`)
-                setAddressToRemoveRole("")
-            } else {
-                toast.error(`Erreur: ${data.error}`)
-            }
-        } catch (error: any) {
-            toast.error(`Erreur: ${error.message || "Une erreur est survenue"}`)
-        } finally {
-            setIsLoading(false)
-        }
+  const removeRoleToAddress = async () => {
+    if (!addressToRemoveRole) {
+      toast.error("Merci de renseigner une adresse.")
+      return
     }
+
+    setIsLoading(true)
+
+    try {
+      // Vérifier que l'adresse renseignée n'a pas déjà le rôle de distributeur
+      const hasRole = await checkDistributorRole(
+        addressToRemoveRole as `0x${string}`
+      )
+
+      if (!hasRole) {
+        toast.warning("Cette adresse n'a pas ce rôle.")
+        setIsLoading(false)
+        return
+      }
+
+      // Appeler l'API route pour ajouter le rôle (côté serveur)
+      const response = await fetch("/api/roles/remove-distributor", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userAddress: addressToRemoveRole }),
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        toast.success(
+          `Rôle de distributeur ajouté avec succès pour l'adresse ${addressToRemoveRole}`
+        )
+        toast.info(`Transaction: ${data.txHash}`)
+        setAddressToRemoveRole("")
+      } else {
+        toast.error(`Erreur: ${data.error}`)
+      }
+    } catch (error: any) {
+      toast.error(`Erreur: ${error.message || "Une erreur est survenue"}`)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8">
@@ -189,63 +189,63 @@ const RoleManagement = () => {
       </Card>
 
       {/* Remove Role Card */}
-        <Card className="border">
-            <CardHeader className="bg-[#234C6A]">
-                <div className="flex items-center gap-3">
-                    <UserPlus className="w-6 h-6 text-white" />
-                    <div>
-                        <CardTitle className="text-white text-xl">
-                            Supprimer le rôle Distributeur
-                        </CardTitle>
-                        <CardDescription className="text-white/80">
-                            Retirer les droits de distribution à une adresse
-                        </CardDescription>
-                    </div>
-                </div>
-            </CardHeader>
-            <CardContent className="pt-6 space-y-4">
-                <div className="space-y-2">
-                    <label
-                        htmlFor="address-input"
-                        className="text-sm font-medium"
-                        style={{ color: "#234C6A" }}
-                    >
-                        Adresse
-                    </label>
-                    <Input
-                        id="address-input"
-                        value={addressToRemoveRole}
-                        onChange={(e) => setAddressToRemoveRole(e.target.value)}
-                        placeholder="0x..."
-                        className="border-2"
-                        style={{
-                            borderColor: "#E3E3E3",
-                            color: "#234C6A",
-                        }}
-                    />
-                </div>
-                <Button
-                    disabled={!addressToRemoveRole || isLoading}
-                    onClick={removeRoleToAddress}
-                    className="w-full text-white font-medium transition-all hover:opacity-90 cursor-pointer"
-                    style={{
-                        backgroundColor: "#456882",
-                    }}
-                >
-                    {isLoading ? (
-                        <span className="flex items-center gap-2">
+      <Card className="border">
+        <CardHeader className="bg-[#234C6A]">
+          <div className="flex items-center gap-3">
+            <UserPlus className="w-6 h-6 text-white" />
+            <div>
+              <CardTitle className="text-white text-xl">
+                Supprimer le rôle Distributeur
+              </CardTitle>
+              <CardDescription className="text-white/80">
+                Retirer les droits de distribution à une adresse
+              </CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="pt-6 space-y-4">
+          <div className="space-y-2">
+            <label
+              htmlFor="address-input"
+              className="text-sm font-medium"
+              style={{ color: "#234C6A" }}
+            >
+              Adresse
+            </label>
+            <Input
+              id="address-input"
+              value={addressToRemoveRole}
+              onChange={(e) => setAddressToRemoveRole(e.target.value)}
+              placeholder="0x..."
+              className="border-2"
+              style={{
+                borderColor: "#E3E3E3",
+                color: "#234C6A",
+              }}
+            />
+          </div>
+          <Button
+            disabled={!addressToRemoveRole || isLoading}
+            onClick={removeRoleToAddress}
+            className="w-full text-white font-medium transition-all hover:opacity-90 cursor-pointer"
+            style={{
+              backgroundColor: "#456882",
+            }}
+          >
+            {isLoading ? (
+              <span className="flex items-center gap-2">
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 Suppression en cours...
               </span>
-                    ) : (
-                        <span className="flex items-center gap-2">
+            ) : (
+              <span className="flex items-center gap-2">
                 <UserPlus className="w-4 h-4" />
                 Supprimer le rôle
               </span>
-                    )}
-                </Button>
-            </CardContent>
-        </Card>
+            )}
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   )
 }

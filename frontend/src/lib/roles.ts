@@ -171,44 +171,44 @@ export async function addDistributorRole(
 }
 
 export async function removeDistributorRole(
-    userAddress: `0x${string}`
+  userAddress: `0x${string}`
 ): Promise<AddRoleResult> {
-    try {
-        const walletClientAdmin = getWalletClientAdmin()
-        // Simuler la transaction d'abord pour vérifier qu'elle passera
-        const { request } = await publicClient.simulateContract({
-            address: CONTRACT_ADDRESS,
-            abi: CONTRACT_ABI,
-            functionName: "removeDistributor",
-            args: [userAddress],
-            account: walletClientAdmin.account,
-        })
+  try {
+    const walletClientAdmin = getWalletClientAdmin()
+    // Simuler la transaction d'abord pour vérifier qu'elle passera
+    const { request } = await publicClient.simulateContract({
+      address: CONTRACT_ADDRESS,
+      abi: CONTRACT_ABI,
+      functionName: "removeDistributor",
+      args: [userAddress],
+      account: walletClientAdmin.account,
+    })
 
-        // Exécuter la transaction
-        const hash = await walletClientAdmin.writeContract(request)
+    // Exécuter la transaction
+    const hash = await walletClientAdmin.writeContract(request)
 
-        // Attendre la confirmation
-        const receipt = await publicClient.waitForTransactionReceipt({
-            hash,
-            confirmations: 1,
-        })
+    // Attendre la confirmation
+    const receipt = await publicClient.waitForTransactionReceipt({
+      hash,
+      confirmations: 1,
+    })
 
-        if (receipt.status === "success") {
-            return {
-                success: true,
-                txHash: hash,
-            }
-        } else {
-            return {
-                success: false,
-                error: "La transaction a échoué",
-            }
-        }
-    } catch (error: any) {
-        console.error("Erreur lors de la suppression du rôle distributor:", error)
-        return {
-            success: false,
-            error: error.message || "Erreur inconnue",
-        }
+    if (receipt.status === "success") {
+      return {
+        success: true,
+        txHash: hash,
+      }
+    } else {
+      return {
+        success: false,
+        error: "La transaction a échoué",
+      }
     }
+  } catch (error: any) {
+    console.error("Erreur lors de la suppression du rôle distributor:", error)
+    return {
+      success: false,
+      error: error.message || "Erreur inconnue",
+    }
+  }
 }
