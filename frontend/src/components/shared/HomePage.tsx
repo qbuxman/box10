@@ -117,8 +117,7 @@ const HomePage = () => {
         <Link href="/strategies">
           <Button
             size="lg"
-            className="px-8 py-6 text-white font-medium transition-all hover:opacity-90 cursor-pointer"
-            style={{ backgroundColor: "#456882" }}
+            className="px-8 py-6 text-white font-medium transition-all hover:opacity-90 cursor-pointer bg-[#456882]"
           >
             <ChartAreaIcon className="mr-2" />
             Voir les stratégies
@@ -127,8 +126,7 @@ const HomePage = () => {
         <Link href="/learn">
           <Button
             size="lg"
-            className="px-8 py-6 text-white font-medium transition-all hover:opacity-90 cursor-pointer"
-            style={{ backgroundColor: "#456882" }}
+            className="px-8 py-6 text-white font-medium transition-all hover:opacity-90 cursor-pointer bg-[#456882]"
           >
             <GraduationCap className="mr-2" />
             Se former
@@ -137,8 +135,7 @@ const HomePage = () => {
         <Link href="/quiz">
           <Button
             size="lg"
-            className="px-8 py-6 text-white font-medium transition-all hover:opacity-90 cursor-pointer"
-            style={{ backgroundColor: "#456882" }}
+            className="px-8 py-6 text-white font-medium transition-all hover:opacity-90 cursor-pointer bg-[#456882]"
           >
             <Lightbulb className="mr-2" />
             Tester ses connaissances
@@ -148,8 +145,7 @@ const HomePage = () => {
           <Link href="/distribute">
             <Button
               size="lg"
-              className="px-8 py-6 text-white font-medium transition-all hover:opacity-90 cursor-pointer"
-              style={{ backgroundColor: "#456882" }}
+              className="px-8 py-6 text-white font-medium transition-all hover:opacity-90 cursor-pointer bg-[#456882]"
             >
               <BadgeDollarSign className="mr-2" />
               Envoyer des jetons
@@ -157,16 +153,25 @@ const HomePage = () => {
           </Link>
         )}
         {isAdmin && (
+            <>
           <Link href="/admin/settings/roles">
             <Button
               size="lg"
-              className="px-8 py-6 text-white font-medium transition-all hover:opacity-90 cursor-pointer"
-              style={{ backgroundColor: "#456882" }}
+              className="px-8 py-6 text-white font-medium transition-all hover:opacity-90 cursor-pointer bg-[#456882]"
             >
               <LockOpen className="mr-2" />
               Gestion des rôles
             </Button>
           </Link>
+            <Link href="/admin/settings/pause">
+            <Button
+            size="lg"
+            className="px-8 py-6 text-white font-medium transition-all hover:opacity-90 cursor-pointer bg-[#456882]"
+      >
+          <LockOpen className="mr-2" />
+          Gestion des pauses
+      </Button>
+    </Link></>
         )}
       </div>
     </div>
