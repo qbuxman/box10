@@ -1,6 +1,6 @@
 import { createWalletClient, http } from "viem"
 import { privateKeyToAccount } from "viem/accounts"
-import { hardhat } from "viem/chains"
+import { sepolia } from "viem/chains"
 
 // Account du distributeur (côté serveur uniquement)
 const distributorAccount = privateKeyToAccount(
@@ -9,6 +9,6 @@ const distributorAccount = privateKeyToAccount(
 
 export const walletClientDistributor = createWalletClient({
   account: distributorAccount,
-  chain: hardhat,
+  chain: sepolia,
   transport: http(),
 })
