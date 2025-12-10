@@ -123,7 +123,7 @@ function getWalletClientAdmin() {
   return createWalletClient({
     account: adminAccount,
     chain: hardhat,
-    transport: http(),
+    transport: http(process.env.NEXT_PUBLIC_INFURA_API_KEY),
   })
 }
 

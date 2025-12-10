@@ -17,5 +17,5 @@ transport : Le mode de transport utilisé pour envoyer et recevoir des données 
 */
 export const publicClient = createPublicClient({
   chain: sepolia,
-  transport: http(),
+  transport: http(process.env.NEXT_PUBLIC_INFURA_API_KEY),
 })

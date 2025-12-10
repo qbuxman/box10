@@ -10,5 +10,5 @@ const distributorAccount = privateKeyToAccount(
 export const walletClientDistributor = createWalletClient({
   account: distributorAccount,
   chain: sepolia,
-  transport: http(),
+  transport: http(process.env.NEXT_PUBLIC_INFURA_API_KEY),
 })
