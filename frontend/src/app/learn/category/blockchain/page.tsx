@@ -38,7 +38,17 @@ const LearnBlockchainCategory = () => {
       .then((response) => {
         if (response.success) {
           toast.success("Leçon terminée ! Vous avez gagné 10 BOX10 !")
+        } else {
+          toast.error(
+            "Une erreur est survenue lors de la récupération des récompenses."
+          )
         }
+      })
+      .catch((error) => {
+        toast.error(
+          "Une erreur est survenue lors de la récupération de la récompense."
+        )
+        console.error(error)
       })
       .finally(() => setIsClaim(false))
   }

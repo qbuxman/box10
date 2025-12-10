@@ -1,6 +1,5 @@
 "use client"
-import { useState } from "react"
-import { claimToken } from "@/utils/claimToken"
+import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import {
   Select,
@@ -21,41 +20,91 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Send } from "lucide-react"
-import { useReadContract } from "wagmi"
+import {
+  useReadContract,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from "wagmi"
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from "@/utils/constants"
+import { formatUnits } from "viem"
 
-export function ClaimToken() {
-  const [loading, setLoading] = useState(false)
+export function ClaimToken({
+  isCriticalDistributor,
+}: {
+  isCriticalDistributor?: boolean
+}) {
   const [recipientForBoxToken, setRecipientForBoxToken] = useState("")
   const [amountToSend, setAmountToSend] = useState<number>(0)
   const [activityId, setActivityId] = useState("")
+
   const { data: balance, refetch } = useReadContract({
     address: CONTRACT_ADDRESS,
     abi: CONTRACT_ABI,
     functionName: "availableSupply",
   })
 
-  const sendToken = async () => {
+  const { data: largeDistributionThreshold } = useReadContract({
+    address: CONTRACT_ADDRESS,
+    abi: CONTRACT_ABI,
+    functionName: "LARGE_DISTRIBUTION_THRESHOLD",
+  })
+
+  const { writeContract, data: hash, isPending, error } = useWriteContract()
+
+  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
+    hash,
+  })
+
+  useEffect(() => {
+    if (isSuccess) {
+      // Save values before resetting
+      toast.success(
+        `${amountToSend} BOX10 ont été envoyés à l'adresse ${recipientForBoxToken} !`
+      )
+      refetch()
+      // Reset form
+      setRecipientForBoxToken("")
+      setAmountToSend(0)
+      setActivityId("")
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess])
+
+  useEffect(() => {
+    if (error) {
+      toast.error(`Erreur: ${error.message}`)
+    }
+  }, [error])
+
+  const sendToken = () => {
     if (!recipientForBoxToken) {
       toast.error("Veuillez renseigner une adresse.")
       return
     }
-    setLoading(true)
-    await claimToken(
-      recipientForBoxToken as `0x${string}`,
-      amountToSend,
-      activityId
-    )
-      .then((response) => {
-        if (response.success) {
-          toast.success(
-            `${amountToSend} BOX10 ont été envoyés à l'adresse ${recipientForBoxToken} !`
-          )
-          refetch()
-        }
-      })
-      .finally(() => setLoading(false))
+
+    if (!activityId) {
+      toast.error("Veuillez sélectionner une activité.")
+      return
+    }
+
+    if (
+      !isCriticalDistributor &&
+      amountToSend >
+        Number(formatUnits(largeDistributionThreshold as bigint, 18))
+    ) {
+      toast.error("Vous n'avez pas les droits pour envoyer ce montant.")
+      return
+    }
+
+    writeContract({
+      address: CONTRACT_ADDRESS,
+      abi: CONTRACT_ABI,
+      functionName: "distribute",
+      args: [recipientForBoxToken as `0x${string}`, amountToSend, activityId],
+    })
   }
+
+  const isLoading = isPending || isConfirming
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8">
@@ -67,10 +116,10 @@ export function ClaimToken() {
         >
           <Send className="w-8 h-8 text-white" />
         </div>
-        <h1 className="text-4xl font-bold" style={{ color: "#234C6A" }}>
+        <h1 className="text-4xl font-bold text-[#234C6A]">
           Réclamer des tokens
         </h1>
-        <p className="text-lg" style={{ color: "#456882" }}>
+        <p className="text-lg text-[#456882]">
           Balance du contrat : {balance ? Number(balance) : 0} BOX10
         </p>
       </div>
@@ -130,7 +179,10 @@ export function ClaimToken() {
                 className="text-sm font-medium"
                 style={{ color: "#234C6A" }}
               >
-                Montant à envoyer
+                Montant à envoyer{" "}
+                {!isCriticalDistributor
+                  ? `(${largeDistributionThreshold ? formatUnits(largeDistributionThreshold as bigint, 18) : 0} BOX10 maximum)`
+                  : ""}
               </label>
               <Input
                 id="amount-input"
@@ -139,6 +191,13 @@ export function ClaimToken() {
                 onChange={(e) => setAmountToSend(Number(e.target.value))}
                 placeholder="0"
                 className="border-2"
+                max={
+                  !isCriticalDistributor && largeDistributionThreshold
+                    ? Number(
+                        formatUnits(largeDistributionThreshold as bigint, 18)
+                      )
+                    : undefined
+                }
                 style={{ borderColor: "#E3E3E3" }}
               />
             </div>
@@ -149,7 +208,7 @@ export function ClaimToken() {
                 className="text-sm font-medium"
                 style={{ color: "#234C6A" }}
               >
-                Adresse Ethereum
+                Adresse
               </label>
               <Input
                 id="address-input"
@@ -165,15 +224,17 @@ export function ClaimToken() {
           <Button
             onClick={sendToken}
             disabled={
-              loading || !recipientForBoxToken.trim() || amountToSend < 1
+              isLoading || !recipientForBoxToken.trim() || amountToSend < 1
             }
             className="w-full text-white font-medium transition-all hover:opacity-90 cursor-pointer"
             style={{ backgroundColor: "#456882" }}
           >
-            {loading ? (
+            {isLoading ? (
               <span className="flex items-center gap-2">
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                Envoi en cours...
+                {isPending
+                  ? "Confirmation en attente..."
+                  : "Transaction en cours..."}
               </span>
             ) : (
               <span className="flex items-center gap-2">

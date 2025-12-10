@@ -2,7 +2,7 @@
 import ClaimToken from "@/components/shared/ClaimToken"
 import { useAccount } from "wagmi"
 import { useEffect, useState } from "react"
-import { checkDistributorRole } from "@/lib/roles"
+import { checkCriticalDistributorRole, checkDistributorRole } from "@/lib/roles"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertCircleIcon } from "lucide-react"
 
@@ -10,24 +10,28 @@ const Distribute = () => {
   const { address, isConnected } = useAccount()
 
   const [isDistributor, setIsDistributor] = useState(false)
+  const [isCriticalDistributor, setIsCriticalDistributor] = useState(false)
 
   useEffect(() => {
-    const checkIfUserConnectedRole = async () => {
+    const checkConnectedUserRoles = async () => {
       if (address && isConnected) {
-        const result = await checkDistributorRole(address)
-        setIsDistributor(result)
+        const isDistributor_ = await checkDistributorRole(address)
+        setIsDistributor(isDistributor_)
+        const isCriticalDistributor_ =
+          await checkCriticalDistributorRole(address)
+        setIsCriticalDistributor(isCriticalDistributor_)
       } else {
         setIsDistributor(false)
+        setIsCriticalDistributor(false)
       }
     }
-
-    checkIfUserConnectedRole()
+    checkConnectedUserRoles()
   }, [isConnected, address])
 
   return (
     <>
-      {isDistributor ? (
-        <ClaimToken />
+      {isDistributor || isCriticalDistributor ? (
+        <ClaimToken isCriticalDistributor={isCriticalDistributor} />
       ) : (
         <Alert variant="destructive">
           <AlertCircleIcon />

@@ -27,23 +27,46 @@ function getWalletClientDistributor() {
   })
 }
 
+function getWalletClientCriticalDistributor() {
+  const privateKey = process.env.CRITICAL_DISTRIBUTOR_PRIVATE_KEY
+
+  if (!privateKey) {
+    throw new Error("CRITICAL_DISTRIBUTOR_PRIVATE_KEY n'existe pas")
+  }
+
+  const criticalDistributorAccount = privateKeyToAccount(
+    privateKey as `0x${string}`
+  )
+
+  return createWalletClient({
+    account: criticalDistributorAccount,
+    chain: hardhat,
+    transport: http(),
+  })
+}
+
 export async function distributeRewards(
   userAddress: `0x${string}`,
   amount: number,
   activityId: string
 ): Promise<DistributeResult> {
   try {
-    const walletClientDistributor = getWalletClientDistributor()
+    const LARGE_DISTRIBUTION_THRESHOLD = 1000
+    const useCriticalDistributor = amount > LARGE_DISTRIBUTION_THRESHOLD
+
+    const walletClient = useCriticalDistributor
+      ? getWalletClientCriticalDistributor()
+      : getWalletClientDistributor()
 
     const { request } = await publicClient.simulateContract({
       address: CONTRACT_ADDRESS,
       abi: CONTRACT_ABI,
       functionName: "distribute",
       args: [userAddress, amount, activityId],
-      account: walletClientDistributor.account,
+      account: walletClient.account,
     })
 
-    const hash = await walletClientDistributor.writeContract(request)
+    const hash = await walletClient.writeContract(request)
 
     const receipt = await publicClient.waitForTransactionReceipt({
       hash,
