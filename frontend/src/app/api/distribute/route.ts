@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { isAddress } from "viem"
 
 interface DistributeRequest {
-  userAddress: string
+  userAddress: `0x${string}`
   rewardAmount: number
   activityId: string
 }
