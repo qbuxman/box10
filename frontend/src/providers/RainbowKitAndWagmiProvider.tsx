@@ -6,8 +6,8 @@ import { sepolia } from "wagmi/chains"
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
 
 const config = getDefaultConfig({
-  appName: "My RainbowKit App",
-  projectId: "YOUR_PROJECT_ID",
+  appName: "BOX10",
+  projectId: "ccb3d3171d0fd8c9d710da482712cf84",
   chains: [sepolia],
   ssr: true, // If your dApp uses server side rendering (SSR)
 })
