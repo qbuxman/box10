@@ -97,7 +97,7 @@ const RoleManagement = () => {
 
       if (data.success) {
         toast.success(
-          `Rôle de distributeur ajouté avec succès pour l'adresse ${addressToRemoveRole}`
+          `Rôle de distributeur retiré avec succès pour l'adresse ${addressToRemoveRole}`
         )
         toast.info(`Transaction: ${data.txHash}`)
         setAddressToRemoveRole("")
