@@ -3,7 +3,6 @@ import { CONTRACT_ABI, CONTRACT_ADDRESS } from "@/utils/constants"
 import {createWalletClient, http, isHex} from "viem"
 import { privateKeyToAccount } from "viem/accounts"
 import { sepolia } from "viem/chains"
-import {NextResponse} from "next/server";
 
 export interface DistributeResult {
   success: boolean
@@ -13,7 +12,7 @@ export interface DistributeResult {
 
 // Fonction helper pour créer le wallet client (problème de build sur github)
 function getWalletClientDistributor() {
-  const privateKey = `Ox${process.env.DISTRIBUTOR_PRIVATE_KEY}`
+  const privateKey = process.env.DISTRIBUTOR_PRIVATE_KEY
 
   if (!privateKey) {
     throw new Error("DISTRIBUTOR_PRIVATE_KEY n'existe pas")
