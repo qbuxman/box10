@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { isAddress } from "viem"
+import {isAddress} from "viem"
 
 interface DistributeRequest {
   userAddress: `0x${string}`

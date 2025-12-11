@@ -1,8 +1,9 @@
 import { publicClient } from "@/utils/client"
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from "@/utils/constants"
-import { createWalletClient, http } from "viem"
+import {createWalletClient, http, isHex} from "viem"
 import { privateKeyToAccount } from "viem/accounts"
 import { sepolia } from "viem/chains"
+import {NextResponse} from "next/server";
 
 export interface DistributeResult {
   success: boolean
@@ -17,6 +18,10 @@ function getWalletClientDistributor() {
   if (!privateKey) {
     throw new Error("DISTRIBUTOR_PRIVATE_KEY n'existe pas")
   }
+
+    if (!isHex(privateKey)) {
+        throw new Error(`privateKey is ${privateKey}, ${typeof privateKey}`)
+    }
 
   const distributorAccount = privateKeyToAccount(privateKey as `0x${string}`)
 
