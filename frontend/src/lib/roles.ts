@@ -2,7 +2,7 @@ import { publicClient } from "@/utils/client"
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from "@/utils/constants"
 import { createWalletClient, http, keccak256, toBytes } from "viem"
 import { privateKeyToAccount } from "viem/accounts"
-import { hardhat } from "viem/chains"
+import {hardhat, sepolia} from "viem/chains"
 
 // Rôles
 export const DEFAULT_ADMIN_ROLE =
@@ -122,7 +122,7 @@ function getWalletClientAdmin() {
 
   return createWalletClient({
     account: adminAccount,
-    chain: hardhat,
+    chain: sepolia,
     transport: http(process.env.NEXT_PUBLIC_INFURA_API_KEY),
   })
 }
