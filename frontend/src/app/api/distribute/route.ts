@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     }
 
     const result = await distributeRewards(
-      userAddress as `0x${string}`,
+      userAddress,
       rewardAmount,
       activityId
     )
