@@ -13,15 +13,11 @@ export interface DistributeResult {
 
 // Fonction helper pour créer le wallet client (problème de build sur github)
 function getWalletClientDistributor() {
-  const privateKey = process.env.DISTRIBUTOR_PRIVATE_KEY
+  const privateKey = `Ox${process.env.DISTRIBUTOR_PRIVATE_KEY}`
 
   if (!privateKey) {
     throw new Error("DISTRIBUTOR_PRIVATE_KEY n'existe pas")
   }
-
-    if (!isHex(privateKey)) {
-        throw new Error(`privateKey is ${privateKey}, ${typeof privateKey}`)
-    }
 
   const distributorAccount = privateKeyToAccount(privateKey as `0x${string}`)
 
