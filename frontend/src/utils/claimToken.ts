@@ -3,7 +3,6 @@ export const claimToken = async (
   amount: number,
   activityId: string
 ) => {
-  console.log("ici")
   const response = await fetch("/api/distribute", {
     method: "POST",
     headers: {

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import StrategyCard from "@/components/shared/StrategyCard"
 import type { Strategy } from "@/types/Strategy"
 import { ChartLine } from "lucide-react"
+import Link from "next/link";
 
 const Strategies = () => {
   const [strategies, setStrategies] = useState<Strategy[]>([])
@@ -48,7 +49,9 @@ const Strategies = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {strategies.map((strategy) => (
-            <StrategyCard key={crypto.randomUUID()} strategy={strategy} />
+              <Link href={`/strategies/use/${strategy.id}`}>
+                  <StrategyCard key={crypto.randomUUID()} strategy={strategy} />
+              </Link>
           ))}
         </div>
       )}

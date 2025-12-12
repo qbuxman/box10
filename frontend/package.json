@@ -11,6 +11,9 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@aave/contract-helpers": "^1.36.2",
+    "@aave/core": "^0.1.0",
+    "@aave/core-v3": "^1.19.3",
     "@radix-ui/react-select": "^2.2.6",
     "@radix-ui/react-slot": "^1.2.4",
     "@rainbow-me/rainbowkit": "^2.2.9",
