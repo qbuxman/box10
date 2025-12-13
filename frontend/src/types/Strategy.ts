@@ -1,5 +1,5 @@
 export type Strategy = {
-    id: string
+  id: string
   title: string
   description: string
   apr: number

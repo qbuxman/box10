@@ -57,7 +57,6 @@ export function ClaimToken({
 
   useEffect(() => {
     if (isSuccess) {
-      // Save values before resetting
       toast.success(
         `${amountToSend} BOX10 ont été envoyés à l'adresse ${recipientForBoxToken} !`
       )

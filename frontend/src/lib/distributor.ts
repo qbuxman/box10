@@ -1,8 +1,8 @@
 import { publicClient } from "@/utils/client"
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from "@/utils/constants"
-import {createWalletClient, http, isHex} from "viem"
+import { createWalletClient, http } from "viem"
 import { privateKeyToAccount } from "viem/accounts"
-import { sepolia } from "viem/chains"
+import { hardhat, sepolia } from "viem/chains"
 
 export interface DistributeResult {
   success: boolean
@@ -18,12 +18,14 @@ function getWalletClientDistributor() {
     throw new Error("DISTRIBUTOR_PRIVATE_KEY n'existe pas")
   }
 
+  const isLocal = process.env.NEXT_PUBLIC_ENV === "development"
   const distributorAccount = privateKeyToAccount(privateKey as `0x${string}`)
-
   return createWalletClient({
     account: distributorAccount,
-    chain: sepolia,
-    transport: http(process.env.NEXT_PUBLIC_INFURA_API_KEY),
+    chain: isLocal ? hardhat : sepolia,
+    transport: http(
+      isLocal ? undefined : process.env.NEXT_PUBLIC_INFURA_API_KEY
+    ),
   })
 }
 
@@ -38,10 +40,14 @@ function getWalletClientCriticalDistributor() {
     privateKey as `0x${string}`
   )
 
+  const isLocal = process.env.NEXT_PUBLIC_ENV === "development"
+
   return createWalletClient({
     account: criticalDistributorAccount,
-    chain: sepolia,
-    transport: http(process.env.NEXT_PUBLIC_INFURA_API_KEY),
+    chain: isLocal ? hardhat : sepolia,
+    transport: http(
+      isLocal ? undefined : process.env.NEXT_PUBLIC_INFURA_API_KEY
+    ),
   })
 }
 

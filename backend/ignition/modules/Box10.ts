@@ -1,11 +1,9 @@
 import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
 
 export default buildModule("Box10Module", (m) => {
-    const adminSafeWallet = '0x2C3F167288903caB856138845B9B3065684CF0D9';
-    const adminWallet = '0x948DB68A78b03aa8399E28Fb4D78D109D33d32CF';
-
-    const criticalDistributorWallet = '0x948DB68A78b03aa8399E28Fb4D78D109D33d32CF';
-    const distributorWallet = '0xe45437cab72d0139c4d72bf7682f0e1b303bb6b0';
+    const adminWallet = '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266';
+    const criticalDistributorWallet = '0x90f79bf6eb2c4f870365e785982e1f101e93b906';
+    const distributorWallet = '0x70997970c51812dc3a010c7d01b50e0d17dc79c8';
 
     const box10 = m.contract("Box10", [adminWallet, criticalDistributorWallet, distributorWallet]);
 

@@ -22,6 +22,13 @@ export default defineConfig({
     },
   },
   networks: {
+    hardhat: {
+      type: "edr-simulated",
+      chainType: "l1",
+      forking: {
+        url: configVariable("SEPOLIA_MAINNET_RPC_URL")
+      }
+    },
     hardhatMainnet: {
       type: "edr-simulated",
       chainType: "l1",

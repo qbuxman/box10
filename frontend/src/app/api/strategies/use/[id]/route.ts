@@ -1,24 +1,24 @@
 import { NextResponse } from "next/server"
-import {Strategy} from "@/types/Strategy";
+import { Strategy } from "@/types/Strategy"
 
 // Données mockées des stratégies
 const strategies: Strategy[] = [
   {
-    id: '1',
+    id: "1",
     title: "Stratégie Conservative",
     description: "Stratégie à faible risque avec rendements stables",
     apr: 8,
     icon: "🛡️",
   },
   {
-    id: '2',
+    id: "2",
     title: "Stratégie Balanced",
     description: "Équilibre entre risque et rendement",
     apr: 10,
     icon: "⚖️",
   },
   {
-    id: '3',
+    id: "3",
     title: "Stratégie Aggressive",
     description: "Rendements élevés avec risque contrôlé",
     apr: 15,

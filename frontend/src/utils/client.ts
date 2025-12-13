@@ -5,7 +5,7 @@ http : Une fonction qui spécifie le mode de transport pour la communication ave
 
 hardhat : Un objet qui représente la chaîne Hardhat, utilisée pour le développement et le test de contrats intelligents localement avant leur déploiement sur une chaîne publique.
 */
-import {createPublicClient, createWalletClient, http, custom } from "viem"
+import { createPublicClient, createWalletClient, http, custom } from "viem"
 import { sepolia, hardhat } from "viem/chains"
 
 /*
@@ -15,14 +15,19 @@ chain : La chaîne de blocs avec laquelle le client doit interagir, ici spécifi
 
 transport : Le mode de transport utilisé pour envoyer et recevoir des données de la blockchain, spécifié ici comme http(), ce qui indique que les requêtes HTTP seront utilisées.
 */
-const isLocal = process.env.NEXT_PUBLIC_ENV === 'development'
+const isLocal = process.env.NEXT_PUBLIC_ENV === "development"
 
 export const publicClient = createPublicClient({
   chain: isLocal ? hardhat : sepolia,
-  transport: http(isLocal ? undefined : process.env.NEXT_PUBLIC_INFURA_API_KEY),
+  transport: http(
+    isLocal ? "http://127.0.0.1:8545" : process.env.NEXT_PUBLIC_INFURA_API_KEY
+  ),
 })
 
 export const walletClient = createWalletClient({
-    chain: isLocal ? hardhat : sepolia,
-    transport: isLocal ? http(): custom(window.ethereum),
-});
+  chain: isLocal ? hardhat : sepolia,
+  transport:
+    typeof window !== "undefined" && window.ethereum
+      ? custom(window.ethereum)
+      : http(isLocal ? undefined : process.env.NEXT_PUBLIC_INFURA_API_KEY),
+})
