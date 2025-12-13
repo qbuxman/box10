@@ -7,23 +7,25 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Send } from "lucide-react"
+import { Loader, Send } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
-import { depositUSDC, getAaveBalance } from "@/utils/aave"
+import { depositUSDC, getAaveBalance, withdrawUSDC } from "@/utils/aave"
 import { useAccount } from "wagmi"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 const StrategyDetail = ({ strategy }: { strategy: Strategy }) => {
   const { isConnected } = useAccount()
   const [amountToSend, setAmountToSend] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const [isLoadingWithdraw, setIsLoadingWithdraw] = useState(false)
   const [userBalanceInPool, setUserBalanceInPool] = useState("0")
 
   useEffect(() => {
     if (isConnected) getUserBalance()
-  }, [isConnected, amountToSend])
+  }, [isConnected])
 
   const getUserBalance = async () => {
     const response = await getAaveBalance()
@@ -53,6 +55,32 @@ const StrategyDetail = ({ strategy }: { strategy: Strategy }) => {
       )
     } finally {
       setIsLoading(false)
+      await getUserBalance()
+    }
+  }
+
+  const withdrawToken = async () => {
+    try {
+      setIsLoadingWithdraw(true)
+      const result = await withdrawUSDC("max")
+
+      if (result.success) {
+        toast.success(
+          `Le retrait de vos fonds s'est correctement déroulé !\n\n Hash de la transaction : ${result.txHash}`
+        )
+      } else {
+        console.error(result.error)
+        toast.error("Une erreur est survenue lors du retrait des fonds.")
+      }
+    } catch (error) {
+      console.error(error)
+      toast.error(
+        (error as Error).message ||
+          "Une erreur est survenue lors de la transaction"
+      )
+    } finally {
+      setIsLoadingWithdraw(false)
+      await getUserBalance()
     }
   }
 
@@ -87,7 +115,35 @@ const StrategyDetail = ({ strategy }: { strategy: Strategy }) => {
         <CardContent className="pt-6 space-y-4">
           <div className="space-y-4">
             <div>
-              Vous avez déjà envoyé {userBalanceInPool} USDC dans la pool
+              <Alert>
+                <AlertDescription>
+                  <div className="flex justify-between items-center w-full">
+                    <p>
+                      Vous avez déjà envoyé{" "}
+                      <span className="font-bold">{userBalanceInPool}</span>{" "}
+                      USDC dans la pool
+                    </p>
+                    {parseInt(userBalanceInPool) ? (
+                      <Button
+                        variant="outline"
+                        className="cursor-pointer"
+                        disabled={isLoadingWithdraw}
+                        onClick={withdrawToken}
+                      >
+                        {isLoadingWithdraw ? (
+                          <div className="flex items-center gap-2">
+                            <Loader /> Demande en cours...
+                          </div>
+                        ) : (
+                          <p>Retirer les fonds</p>
+                        )}
+                      </Button>
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                </AlertDescription>
+              </Alert>
             </div>
             <div className="space-y-2">
               <label
@@ -101,6 +157,7 @@ const StrategyDetail = ({ strategy }: { strategy: Strategy }) => {
                 id="amount-input"
                 type="number"
                 value={amountToSend}
+                min={0}
                 onChange={(e) => setAmountToSend(e.target.value)}
                 placeholder="0"
                 className="border-2"
@@ -112,8 +169,7 @@ const StrategyDetail = ({ strategy }: { strategy: Strategy }) => {
           <Button
             onClick={sendToken}
             disabled={isLoading || amountToSend.length === 0}
-            className="w-full text-white font-medium transition-all hover:opacity-90 cursor-pointer"
-            style={{ backgroundColor: "#456882" }}
+            className="w-full text-white font-medium transition-all hover:opacity-90 cursor-pointer bg-[#456882]"
           >
             {isLoading ? (
               <span className="flex items-center gap-2">

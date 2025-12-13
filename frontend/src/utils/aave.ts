@@ -231,7 +231,7 @@ export const depositUSDC = async (amount: string) => {
     }
 
     // Vérifier le supply cap
-    const [borrowCap, supplyCap] = (await publicClient.readContract({
+    const [supplyCap] = (await publicClient.readContract({
       address: POOL_DATA_PROVIDER_ADDRESS,
       abi: POOL_DATA_PROVIDER_ABI,
       functionName: "getReserveCaps",
@@ -311,6 +311,128 @@ export const depositUSDC = async (amount: string) => {
     return { success: true, txHash: depositTx }
   } catch (error) {
     console.error("Erreur lors du dépôt :", error)
+    return { success: false, error: (error as Error).message }
+  }
+}
+
+export const withdrawUSDC = async (amount: string) => {
+  try {
+    const [address] = await walletClient.requestAddresses()
+
+    if (!address) throw new Error("Veuillez vous connecter à MetaMask.")
+
+    // Vérifier le solde ETH pour les frais de gas
+    const balance = await publicClient.getBalance({ address })
+    if (balance === BigInt(0)) {
+      throw new Error(
+        "Vous n'avez pas d'ETH pour payer les frais de transaction."
+      )
+    }
+
+    // Récupérer les décimales réelles du token USDC
+    const decimalsResult = (await publicClient.readContract({
+      address: USDC_ADDRESS,
+      abi: [
+        {
+          constant: true,
+          inputs: [],
+          name: "decimals",
+          outputs: [{ name: "", type: "uint8" }],
+          type: "function",
+        },
+      ],
+      functionName: "decimals",
+    })) as number
+
+    // Récupérer l'adresse du aToken
+    const reserveTokens = (await publicClient.readContract({
+      address: POOL_DATA_PROVIDER_ADDRESS,
+      abi: [
+        {
+          inputs: [{ name: "asset", type: "address" }],
+          name: "getReserveTokensAddresses",
+          outputs: [
+            { name: "aTokenAddress", type: "address" },
+            { name: "stableDebtTokenAddress", type: "address" },
+            { name: "variableDebtTokenAddress", type: "address" },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+      ],
+      functionName: "getReserveTokensAddresses",
+      args: [USDC_ADDRESS],
+    })) as [string, string, string]
+
+    const aTokenAddress = reserveTokens[0]
+
+    // Vérifier le solde d'aUSDC de l'utilisateur
+    const aTokenBalance = (await publicClient.readContract({
+      address: aTokenAddress as `0x${string}`,
+      abi: ERC20_ABI,
+      functionName: "balanceOf",
+      args: [address],
+    })) as bigint
+
+    if (aTokenBalance === BigInt(0)) {
+      throw new Error(
+        "Vous n'avez pas d'aUSDC à retirer. Veuillez d'abord déposer des USDC."
+      )
+    }
+
+    // Déterminer le montant à retirer
+    let amountToWithdraw: bigint
+
+    if (amount === "max" || !amount) {
+      // Retirer tout
+      amountToWithdraw = BigInt(
+        "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      ) // type(uint256).max
+      console.log(
+        `💰 Retrait de tout le solde: ${formatUnits(aTokenBalance, decimalsResult)} USDC`
+      )
+    } else {
+      amountToWithdraw = parseUnits(amount, decimalsResult)
+
+      // Vérifier que l'utilisateur a suffisamment d'aTokens
+      if (aTokenBalance < amountToWithdraw) {
+        throw new Error(
+          `Solde aUSDC insuffisant. Vous avez ${formatUnits(aTokenBalance, decimalsResult)} aUSDC mais tentez de retirer ${amount} USDC.`
+        )
+      }
+    }
+
+    // Simuler la transaction withdraw avant de l'exécuter
+    try {
+      await publicClient.simulateContract({
+        address: POOL_ADDRESS,
+        abi: POOL_ABI,
+        functionName: "withdraw",
+        args: [USDC_ADDRESS, amountToWithdraw, address],
+        account: address,
+      })
+    } catch (simError: any) {
+      console.error("Erreur de simulation:", simError)
+      throw new Error(
+        `La transaction échouerait: ${simError.message || "Erreur inconnue"}`
+      )
+    }
+
+    // Exécuter le retrait
+    const withdrawTx = await walletClient.writeContract({
+      address: POOL_ADDRESS,
+      abi: POOL_ABI,
+      functionName: "withdraw",
+      args: [USDC_ADDRESS, amountToWithdraw, address],
+      account: address,
+      gas: BigInt(500000),
+    })
+
+    await publicClient.waitForTransactionReceipt({ hash: withdrawTx })
+
+    return { success: true, txHash: withdrawTx }
+  } catch (error) {
+    console.error("Erreur lors du retrait :", error)
     return { success: false, error: (error as Error).message }
   }
 }
