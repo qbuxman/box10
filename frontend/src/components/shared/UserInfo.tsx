@@ -1,16 +1,34 @@
 import { TransactionEvent } from "@/types/TransactionEvent"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ArrowDownCircle, ArrowUpCircle, User2 } from "lucide-react"
+import { ArrowDownCircle, ArrowUpCircle, User2, Gift } from "lucide-react"
 import { formatUnits } from "viem"
 
 const UserInfo = ({
   transactionEvents,
-  balances,
 }: {
   transactionEvents: TransactionEvent[]
-  balances: any
 }) => {
+  const getTokenInfo = (type: string) => {
+    if (type === "Deposit" || type === "Withdraw") {
+      return { decimals: 6, symbol: "USDC" }
+    }
+    // Affichage limité à 1 décimal pour plus de simplicité pour l'utilisateur
+    return { decimals: 1, symbol: "BOX10" }
+  }
+
+  const getIcon = (type: string) => {
+    if (type === "Deposit") {
+      return (
+        <ArrowDownCircle className="w-6 h-6" style={{ color: "#22c55e" }} />
+      )
+    } else if (type === "Withdraw") {
+      return <ArrowUpCircle className="w-6 h-6" style={{ color: "#ef4444" }} />
+    } else {
+      return <Gift className="w-6 h-6" style={{ color: "#f59e0b" }} />
+    }
+  }
+
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-8">
       {/* Header */}
@@ -25,7 +43,7 @@ const UserInfo = ({
           Mon Compte
         </h1>
         <p className="text-lg" style={{ color: "#456882" }}>
-          Historique de vos transactions Aave
+          Historique de vos transactions
         </p>
       </div>
 
@@ -36,76 +54,70 @@ const UserInfo = ({
             Transactions ({transactionEvents.length})
           </h2>
           <div className="grid gap-4">
-            {transactionEvents.map((e: TransactionEvent) => (
-              <Card
-                key={crypto.randomUUID()}
-                className="border-2 hover:shadow-md transition-shadow duration-200"
-                style={{ borderColor: "#E3E3E3" }}
-              >
-                <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      {e.type === "Deposit" ? (
-                        <ArrowDownCircle
-                          className="w-6 h-6"
-                          style={{ color: "#22c55e" }}
-                        />
-                      ) : (
-                        <ArrowUpCircle
-                          className="w-6 h-6"
-                          style={{ color: "#ef4444" }}
-                        />
-                      )}
-                      <span style={{ color: "#234C6A" }}>{e.type}</span>
+            {transactionEvents.map((e: TransactionEvent) => {
+              const tokenInfo = getTokenInfo(e.type)
+              return (
+                <Card
+                  key={crypto.randomUUID()}
+                  className="border-2 hover:shadow-md transition-shadow duration-200"
+                  style={{ borderColor: "#E3E3E3" }}
+                >
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        {getIcon(e.type)}
+                        <span style={{ color: "#234C6A" }}>{e.type}</span>
+                      </div>
+                      <Badge
+                        variant="outline"
+                        className="text-sm"
+                        style={{ borderColor: "#234C6A", color: "#234C6A" }}
+                      >
+                        {formatUnits(e.amount, tokenInfo.decimals)}{" "}
+                        {tokenInfo.symbol}
+                      </Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                      <div>
+                        <p className="font-medium" style={{ color: "#234C6A" }}>
+                          Compte
+                        </p>
+                        <p
+                          className="font-mono text-xs truncate"
+                          style={{ color: "#456882" }}
+                        >
+                          {e.account}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="font-medium" style={{ color: "#234C6A" }}>
+                          Bloc
+                        </p>
+                        <p style={{ color: "#456882" }}>
+                          #{e.blockNumber.toString()}
+                        </p>
+                      </div>
                     </div>
-                    <Badge
-                      variant="outline"
-                      className="text-sm"
-                      style={{ borderColor: "#234C6A", color: "#234C6A" }}
-                    >
-                      {formatUnits(e.amount, 6)} USDC
-                    </Badge>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                     <div>
-                      <p className="font-medium" style={{ color: "#234C6A" }}>
-                        Compte
+                      <p
+                        className="font-medium text-sm"
+                        style={{ color: "#234C6A" }}
+                      >
+                        Transaction Hash
                       </p>
                       <p
                         className="font-mono text-xs truncate"
                         style={{ color: "#456882" }}
                       >
-                        {e.account}
+                        {e.transactionHash}
                       </p>
                     </div>
-                    <div>
-                      <p className="font-medium" style={{ color: "#234C6A" }}>
-                        Bloc
-                      </p>
-                      <p style={{ color: "#456882" }}>
-                        #{e.blockNumber.toString()}
-                      </p>
-                    </div>
-                  </div>
-                  <div>
-                    <p
-                      className="font-medium text-sm"
-                      style={{ color: "#234C6A" }}
-                    >
-                      Transaction Hash
-                    </p>
-                    <p
-                      className="font-mono text-xs truncate"
-                      style={{ color: "#456882" }}
-                    >
-                      {e.transactionHash}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              )
+            })}
           </div>
         </div>
       ) : (

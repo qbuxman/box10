@@ -1,5 +1,5 @@
 "use client"
-import { Strategy } from "@/types/Strategy"
+import { StrategyDetails } from "@/types/Strategy"
 import {
   Card,
   CardContent,
@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Loader, Send } from "lucide-react"
+import { Loader, Puzzle, Send, Timer } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
@@ -16,7 +16,7 @@ import { depositUSDC, getAaveBalance, withdrawUSDC } from "@/utils/aave"
 import { useAccount } from "wagmi"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
-const StrategyDetail = ({ strategy }: { strategy: Strategy }) => {
+const StrategyDetail = ({ strategy }: { strategy: StrategyDetails | null }) => {
   const { isConnected } = useAccount()
   const [amountToSend, setAmountToSend] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -84,18 +84,80 @@ const StrategyDetail = ({ strategy }: { strategy: Strategy }) => {
     }
   }
 
+  // Si la stratégie n'existe pas ou n'est pas active
+  if (!strategy || !strategy.active) {
+    return (
+      <div className="max-w-4xl mx-auto p-6 space-y-8">
+        <div className="text-center space-y-2">
+          <div
+            className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4"
+            style={{ backgroundColor: "#234C6A" }}
+          >
+            <Send className="w-8 h-8 text-white" />
+          </div>
+          <h1 className="text-4xl font-bold text-[#234C6A]">
+            Stratégie non disponible
+          </h1>
+          <p className="text-lg text-[#456882]">
+            Cette stratégie n'est pas disponible pour le moment.
+          </p>
+        </div>
+        <Card className="border-2" style={{ borderColor: "#E3E3E3" }}>
+          <CardContent className="py-12 text-center">
+            <p className="text-lg" style={{ color: "#456882" }}>
+              La stratégie que vous recherchez n'existe pas ou n'est pas encore
+              active.
+            </p>
+            <p className="text-sm mt-2" style={{ color: "#456882" }}>
+              Veuillez revenir à la liste des stratégies disponibles.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8">
       {/* Header */}
-      <div className="text-center space-y-2">
-        <div
-          className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4"
-          style={{ backgroundColor: "#234C6A" }}
-        >
-          <Send className="w-8 h-8 text-white" />
+      <div className="space-y-6">
+        {/* Icon et titre */}
+        <div className="text-center space-y-2">
+          <div
+            className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4"
+            style={{ backgroundColor: "#234C6A" }}
+          >
+            <Send className="w-8 h-8 text-white" />
+          </div>
+          <h1 className="text-4xl font-bold text-[#234C6A]">
+            {strategy.title}
+          </h1>
+          <p className="text-lg text-[#456882]">{strategy.description}</p>
         </div>
-        <h1 className="text-4xl font-bold text-[#234C6A]">{strategy.title}</h1>
-        <p className="text-lg text-[#456882]">{strategy.description}</p>
+
+        {/* Details et Horizon */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6 px-4">
+          <div className="space-y-2">
+            <h3
+              className="text-sm font-semibold uppercase tracking-wide flex gap-2 items-center"
+              style={{ color: "#234C6A" }}
+            >
+              <Puzzle /> Fonctionnement réel
+            </h3>
+            <p className="text-sm leading-relaxed" style={{ color: "#456882" }}>
+              {strategy.details}
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <h3 className="text-sm font-semibold uppercase tracking-wide flex gap-2 items-center text-[#234C6A]">
+              <Timer /> Horizon
+            </h3>
+            <p className="text-sm leading-relaxed" style={{ color: "#456882" }}>
+              {strategy.horizon}
+            </p>
+          </div>
+        </div>
       </div>
 
       <Card className="border mt-4">

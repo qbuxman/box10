@@ -1,28 +1,20 @@
 import { NextResponse } from "next/server"
-import { Strategy } from "@/types/Strategy"
+import { StrategyDetails } from "@/types/Strategy"
 
 // Données mockées des stratégies
-const strategies: Strategy[] = [
+const strategies: StrategyDetails[] = [
   {
     id: "1",
-    title: "Stratégie Conservative",
-    description: "Stratégie à faible risque avec rendements stables",
-    apr: 8,
+    title: "Stratégie “Sécurité”",
+    description:
+      "Préserver la valeur de liquidités disponibles tout en générant un rendement modéré, sans exposition au marché crypto.",
+    details:
+      "Vos stablecoins sont déposés sur un protocole de lending EVM éprouvé. Ils sont prêtés à des emprunteurs surcollatéralisés, ce qui génère un rendement variable mais historiquement stable.",
+    apr: 3,
+    risk: 1,
     icon: "🛡️",
-  },
-  {
-    id: "2",
-    title: "Stratégie Balanced",
-    description: "Équilibre entre risque et rendement",
-    apr: 10,
-    icon: "⚖️",
-  },
-  {
-    id: "3",
-    title: "Stratégie Aggressive",
-    description: "Rendements élevés avec risque contrôlé",
-    apr: 15,
-    icon: "🚀",
+    horizon: "Court à moyen terme (3 à 12 mois)",
+    active: true,
   },
 ]
 

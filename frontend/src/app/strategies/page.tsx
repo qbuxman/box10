@@ -48,14 +48,27 @@ const Strategies = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {strategies.map((strategy) => (
-            <Link
-              href={`/strategies/use/${strategy.id}`}
-              key={crypto.randomUUID()}
-            >
-              <StrategyCard strategy={strategy} />
-            </Link>
-          ))}
+          {strategies.map((strategy) => {
+            if (strategy.active) {
+              return (
+                <Link
+                  href={`/strategies/use/${strategy.id}`}
+                  key={crypto.randomUUID()}
+                >
+                  <StrategyCard strategy={strategy} />
+                </Link>
+              )
+            } else {
+              return (
+                <div
+                  key={crypto.randomUUID()}
+                  className="opacity-50 cursor-not-allowed"
+                >
+                  <StrategyCard strategy={strategy} />
+                </div>
+              )
+            }
+          })}
         </div>
       )}
     </div>
