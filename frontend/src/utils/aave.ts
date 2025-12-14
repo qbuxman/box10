@@ -1,23 +1,16 @@
 import { publicClient, walletClient } from "./client"
 import { parseUnits, formatUnits } from "viem"
-import PoolArtifact from "@aave/core-v3/artifacts/contracts/protocol/pool/Pool.sol/Pool.json"
-
-// Adresses des contrats Aave v3
-// Sepolia
-const USDC_ADDRESS_SEPOLIA =
-  "0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8" as const
-const POOL_ADDRESS_SEPOLIA =
-  "0x6Ae43d3271ff6888e7Fc43Fd7321a503ff738951" as const
-const POOL_DATA_PROVIDER_SEPOLIA =
-  "0x3e9708d80f7B3e43118013075F7e95CE3AB31F31" as const
-
-// Mainnet (pour fork local)
-const USDC_ADDRESS_MAINNET =
-  "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48" as const
-const POOL_ADDRESS_MAINNET =
-  "0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2" as const
-const POOL_DATA_PROVIDER_MAINNET =
-  "0x7B4EB56E7CD4b454BA8ff71E4518426369a138a3" as const
+import {
+  ERC20_ABI,
+  POOL_ABI,
+  POOL_ADDRESS_MAINNET,
+  POOL_ADDRESS_SEPOLIA,
+  POOL_DATA_PROVIDER_ABI,
+  POOL_DATA_PROVIDER_MAINNET,
+  POOL_DATA_PROVIDER_SEPOLIA,
+  USDC_ADDRESS_MAINNET,
+  USDC_ADDRESS_SEPOLIA,
+} from "@/utils/aave-constants"
 
 // Config selon l'environnement
 const isLocal = process.env.NEXT_PUBLIC_ENV === "development"
@@ -26,82 +19,6 @@ const POOL_ADDRESS = isLocal ? POOL_ADDRESS_MAINNET : POOL_ADDRESS_SEPOLIA
 const POOL_DATA_PROVIDER_ADDRESS = isLocal
   ? POOL_DATA_PROVIDER_MAINNET
   : POOL_DATA_PROVIDER_SEPOLIA
-
-// ABI du Pool Aave v3
-const POOL_ABI = PoolArtifact.abi
-
-// ABI minimal pour ERC20 approve et balanceOf
-const ERC20_ABI = [
-  {
-    constant: false,
-    inputs: [
-      { name: "spender", type: "address" },
-      { name: "amount", type: "uint256" },
-    ],
-    name: "approve",
-    outputs: [{ name: "", type: "bool" }],
-    type: "function",
-  },
-  {
-    constant: true,
-    inputs: [{ name: "account", type: "address" }],
-    name: "balanceOf",
-    outputs: [{ name: "", type: "uint256" }],
-    type: "function",
-  },
-] as const
-
-// ABI pour PoolDataProvider
-const POOL_DATA_PROVIDER_ABI = [
-  {
-    inputs: [{ name: "asset", type: "address" }],
-    name: "getReserveConfigurationData",
-    outputs: [
-      { name: "decimals", type: "uint256" },
-      { name: "ltv", type: "uint256" },
-      { name: "liquidationThreshold", type: "uint256" },
-      { name: "liquidationBonus", type: "uint256" },
-      { name: "reserveFactor", type: "uint256" },
-      { name: "usageAsCollateralEnabled", type: "bool" },
-      { name: "borrowingEnabled", type: "bool" },
-      { name: "stableBorrowRateEnabled", type: "bool" },
-      { name: "isActive", type: "bool" },
-      { name: "isFrozen", type: "bool" },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [{ name: "asset", type: "address" }],
-    name: "getReserveCaps",
-    outputs: [
-      { name: "borrowCap", type: "uint256" },
-      { name: "supplyCap", type: "uint256" },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [{ name: "asset", type: "address" }],
-    name: "getReserveData",
-    outputs: [
-      { name: "unbacked", type: "uint256" },
-      { name: "accruedToTreasuryScaled", type: "uint256" },
-      { name: "totalAToken", type: "uint256" },
-      { name: "totalStableDebt", type: "uint256" },
-      { name: "totalVariableDebt", type: "uint256" },
-      { name: "liquidityRate", type: "uint256" },
-      { name: "variableBorrowRate", type: "uint256" },
-      { name: "stableBorrowRate", type: "uint256" },
-      { name: "averageStableBorrowRate", type: "uint256" },
-      { name: "liquidityIndex", type: "uint256" },
-      { name: "variableBorrowIndex", type: "uint256" },
-      { name: "lastUpdateTimestamp", type: "uint40" },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-] as const
 
 export const getAaveBalance = async () => {
   try {

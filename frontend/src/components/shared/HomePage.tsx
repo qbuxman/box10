@@ -8,6 +8,7 @@ import {
   Lightbulb,
   LockOpen,
   Package,
+  User2,
 } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useState } from "react"
@@ -139,6 +140,15 @@ const HomePage = () => {
           >
             <Lightbulb className="mr-2" />
             Tester ses connaissances
+          </Button>
+        </Link>
+        <Link href="/account">
+          <Button
+            size="lg"
+            className="px-8 py-6 text-white font-medium transition-all hover:opacity-90 cursor-pointer bg-[#456882]"
+          >
+            <User2 className="mr-2" />
+            Mon compte
           </Button>
         </Link>
         {isDistributor && (
