@@ -21,7 +21,7 @@ export async function GET(): Promise<NextResponse<LearnCategory[]>> {
     {
       id: 2,
       title: "Finance décentralisée",
-      description: "Stratégie à faible risque avec rendements stables",
+      description: "Des ressources pour en apprendre plus sur le fonctionnement de la finance décentralisée.",
       families: [
         { id: 3, label: "DeFi" },
         { id: 2, label: "crypto" },
@@ -32,7 +32,7 @@ export async function GET(): Promise<NextResponse<LearnCategory[]>> {
     {
       id: 3,
       title: "Finance traditionnelle",
-      description: "Stratégie à faible risque avec rendements stables",
+      description: "Des ressources pour en apprendre plus sur le fonctionnement de la finance traditionnelle.",
       families: [
         { id: 4, label: "bourse" },
         { id: 5, label: "fiat" },
@@ -43,7 +43,7 @@ export async function GET(): Promise<NextResponse<LearnCategory[]>> {
     {
       id: 4,
       title: "Plateforme d'échange",
-      description: "Stratégie à faible risque avec rendements stables",
+      description: "Des ressources pour en apprendre plus sur les plateformes d'échange.",
       families: [
         { id: 4, label: "bourse" },
         { id: 5, label: "fiat" },
