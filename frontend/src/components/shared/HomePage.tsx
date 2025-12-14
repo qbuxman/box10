@@ -163,6 +163,15 @@ const HomePage = () => {
                 Gestion des rôles
               </Button>
             </Link>
+            <Link href="/admin/settings/admin-role">
+              <Button
+                size="lg"
+                className="px-8 py-6 text-white font-medium transition-all hover:opacity-90 cursor-pointer bg-[#456882]"
+              >
+                <LockOpen className="mr-2" />
+                Gestion des admins
+              </Button>
+            </Link>
             <Link href="/admin/settings/pause">
               <Button
                 size="lg"
