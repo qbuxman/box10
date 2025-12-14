@@ -19,9 +19,7 @@ const UserInfo = ({
 
   const getIcon = (type: string) => {
     if (type === "Deposit") {
-      return (
-        <ArrowDownCircle className="w-6 h-6 text-green-500" />
-      )
+      return <ArrowDownCircle className="w-6 h-6 text-green-500" />
     } else if (type === "Withdraw") {
       return <ArrowUpCircle className="w-6 h-6 text-red-500" />
     } else {
@@ -36,12 +34,8 @@ const UserInfo = ({
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 bg-[#234C6A]">
           <User2 className="text-white text-2xl" />
         </div>
-        <h1 className="text-4xl font-bold text-[#234C6A]">
-          Mon Compte
-        </h1>
-        <p className="text-lg text-[#456882]">
-          Historique de vos transactions
-        </p>
+        <h1 className="text-4xl font-bold text-[#234C6A]">Mon Compte</h1>
+        <p className="text-lg text-[#456882]">Historique de vos transactions</p>
       </div>
 
       {/* Transactions List */}
@@ -76,17 +70,13 @@ const UserInfo = ({
                   <CardContent className="space-y-2">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                       <div>
-                        <p className="font-medium text-[#234C6A]">
-                          Compte
-                        </p>
+                        <p className="font-medium text-[#234C6A]">Compte</p>
                         <p className="font-mono text-xs truncate text-[#456882]">
                           {e.account}
                         </p>
                       </div>
                       <div>
-                        <p className="font-medium text-[#234C6A]">
-                          Bloc
-                        </p>
+                        <p className="font-medium text-[#234C6A]">Bloc</p>
                         <p className="text-[#456882]">
                           #{e.blockNumber.toString()}
                         </p>

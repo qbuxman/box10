@@ -16,9 +16,7 @@ const LearnCategoryCard = ({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <p className="text-sm text-[#456882]">
-          {learnCategory.description}
-        </p>
+        <p className="text-sm text-[#456882]">{learnCategory.description}</p>
         <div className="flex flex-wrap items-center gap-2">
           {learnCategory.families.map((family) => (
             <Badge

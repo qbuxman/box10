@@ -38,9 +38,7 @@ const LearnPage = () => {
             <GraduationCap />
           </span>
         </div>
-        <h1 className="text-4xl font-bold text-[#234C6A]">
-          Les formations
-        </h1>
+        <h1 className="text-4xl font-bold text-[#234C6A]">Les formations</h1>
         <p className="text-lg text-[#456882]">
           Découvrez nos catégories d'apprentissage
         </p>

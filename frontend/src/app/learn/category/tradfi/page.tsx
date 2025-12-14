@@ -60,21 +60,15 @@ const LearnTradfiCategory = () => {
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 bg-[#234C6A]">
           <GraduationCap className="w-8 h-8 text-white" />
         </div>
-        <h1 className="text-4xl font-bold text-[#234C6A]">
-          {lesson?.title}
-        </h1>
-        <p className="text-lg text-[#456882]">
-          {lesson?.subtitle}
-        </p>
+        <h1 className="text-4xl font-bold text-[#234C6A]">{lesson?.title}</h1>
+        <p className="text-lg text-[#456882]">{lesson?.subtitle}</p>
       </div>
 
       {/* Content */}
       {isLoading ? (
         <div className="flex flex-col items-center justify-center h-64 gap-4">
           <Loader className="w-8 h-8 animate-spin text-[#234C6A]" />
-          <p className="text-lg text-[#456882]">
-            Chargement en cours...
-          </p>
+          <p className="text-lg text-[#456882]">Chargement en cours...</p>
         </div>
       ) : (
         <div className="space-y-6">
