@@ -61,8 +61,8 @@ const HomePage = () => {
         </CardHeader>
         <CardContent>
           <p className="text-lg text-[#456882]">
-            Proposer des stratégies accessibles, diversifiées et capables
-            d'atteindre 10 % ou plus selon votre profil.
+            Des stratégies DeFi accessibles et diversifiées, visant des
+            rendements indicatifs autour de 10%, selon votre profil de risque.
           </p>
         </CardContent>
       </Card>

@@ -25,7 +25,8 @@ const QuizPage = () => {
             En attendant, vous pouvez déjà consulter nos{" "}
             <Link href="/learn" className="font-bold text-md underline">
               fiches explicatives
-            </Link> 🤓
+            </Link>{" "}
+            🤓
           </p>
         </CardContent>
       </Card>

@@ -28,9 +28,7 @@ const AdminRoleManagement = () => {
 
     try {
       // Vérifier que l'adresse renseignée n'a pas déjà le rôle d'admin
-      const hasRole = await checkAdminRole(
-        addressToAddRole as `0x${string}`
-      )
+      const hasRole = await checkAdminRole(addressToAddRole as `0x${string}`)
 
       if (hasRole) {
         toast.warning("Cette adresse a déjà ce rôle.")
@@ -71,17 +69,15 @@ const AdminRoleManagement = () => {
       return
     }
 
-      setIsLoadingRemove(true)
+    setIsLoadingRemove(true)
 
     try {
       // Vérifier que l'adresse renseignée a bien le rôle d'admin
-      const hasRole = await checkAdminRole(
-        addressToRemoveRole as `0x${string}`
-      )
+      const hasRole = await checkAdminRole(addressToRemoveRole as `0x${string}`)
 
       if (!hasRole) {
         toast.warning("Cette adresse n'a pas ce rôle.")
-          setIsLoadingRemove(false)
+        setIsLoadingRemove(false)
         return
       }
 
