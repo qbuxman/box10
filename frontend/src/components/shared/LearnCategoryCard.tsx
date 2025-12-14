@@ -8,10 +8,7 @@ const LearnCategoryCard = ({
   learnCategory: LearnCategory
 }) => {
   return (
-    <Card
-      className="hover:scale-[1.02] transition-transform duration-200 cursor-pointer h-full border-2"
-      style={{ borderColor: "#E3E3E3" }}
-    >
+    <Card className="hover:scale-[1.02] transition-transform duration-200 cursor-pointer h-full border-2 border-[#E3E3E3]">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-[#234C6A]">
           <span>{learnCategory.icon}</span>
@@ -19,7 +16,7 @@ const LearnCategoryCard = ({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <p className="text-sm" style={{ color: "#456882" }}>
+        <p className="text-sm text-[#456882]">
           {learnCategory.description}
         </p>
         <div className="flex flex-wrap items-center gap-2">

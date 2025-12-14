@@ -110,8 +110,7 @@ export function ClaimToken({
       {/* Header */}
       <div className="text-center space-y-2">
         <div
-          className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4"
-          style={{ backgroundColor: "#234C6A" }}
+          className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 bg-[#234C6A]"
         >
           <Send className="w-8 h-8 text-white" />
         </div>
@@ -143,8 +142,7 @@ export function ClaimToken({
             <div className="space-y-2">
               <label
                 htmlFor="activity-select"
-                className="text-sm font-medium"
-                style={{ color: "#234C6A" }}
+                className="text-sm font-medium text-[#234C6A]"
               >
                 Activité réalisée
               </label>
@@ -154,8 +152,7 @@ export function ClaimToken({
               >
                 <SelectTrigger
                   id="activity-select"
-                  className="w-full border-2"
-                  style={{ borderColor: "#E3E3E3" }}
+                  className="w-full border-2 border-[#E3E3E3]"
                 >
                   <SelectValue placeholder="Choisir un motif" />
                 </SelectTrigger>
@@ -175,8 +172,7 @@ export function ClaimToken({
             <div className="space-y-2">
               <label
                 htmlFor="amount-input"
-                className="text-sm font-medium"
-                style={{ color: "#234C6A" }}
+                className="text-sm font-medium text-[#234C6A]"
               >
                 Montant à envoyer{" "}
                 {!isCriticalDistributor
@@ -189,7 +185,7 @@ export function ClaimToken({
                 value={amountToSend}
                 onChange={(e) => setAmountToSend(Number(e.target.value))}
                 placeholder="0"
-                className="border-2"
+                className="border-2 border-[#E3E3E3]"
                 max={
                   !isCriticalDistributor && largeDistributionThreshold
                     ? Number(
@@ -197,15 +193,13 @@ export function ClaimToken({
                       )
                     : undefined
                 }
-                style={{ borderColor: "#E3E3E3" }}
               />
             </div>
 
             <div className="space-y-2">
               <label
                 htmlFor="address-input"
-                className="text-sm font-medium"
-                style={{ color: "#234C6A" }}
+                className="text-sm font-medium text-[#234C6A]"
               >
                 Adresse
               </label>
@@ -214,8 +208,7 @@ export function ClaimToken({
                 value={recipientForBoxToken}
                 onChange={(e) => setRecipientForBoxToken(e.target.value)}
                 placeholder="0x..."
-                className="border-2"
-                style={{ borderColor: "#E3E3E3" }}
+                className="border-2 border-[#E3E3E3]"
               />
             </div>
           </div>
@@ -225,8 +218,7 @@ export function ClaimToken({
             disabled={
               isLoading || !recipientForBoxToken.trim() || amountToSend < 1
             }
-            className="w-full text-white font-medium transition-all hover:opacity-90 cursor-pointer"
-            style={{ backgroundColor: "#456882" }}
+            className="w-full text-white font-medium transition-all hover:opacity-90 cursor-pointer bg-[#456882]"
           >
             {isLoading ? (
               <span className="flex items-center gap-2">

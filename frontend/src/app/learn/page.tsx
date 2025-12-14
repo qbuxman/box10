@@ -33,18 +33,15 @@ const LearnPage = () => {
     <div className="max-w-6xl mx-auto p-6 space-y-8">
       {/* Header */}
       <div className="text-center space-y-2">
-        <div
-          className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4"
-          style={{ backgroundColor: "#234C6A" }}
-        >
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 bg-[#234C6A]">
           <span className="text-white text-2xl">
             <GraduationCap />
           </span>
         </div>
-        <h1 className="text-4xl font-bold" style={{ color: "#234C6A" }}>
+        <h1 className="text-4xl font-bold text-[#234C6A]">
           Les formations
         </h1>
-        <p className="text-lg" style={{ color: "#456882" }}>
+        <p className="text-lg text-[#456882]">
           Découvrez nos catégories d'apprentissage
         </p>
       </div>

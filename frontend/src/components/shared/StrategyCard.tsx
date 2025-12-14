@@ -3,10 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 const StrategyCard = ({ strategy }: { strategy: Strategy }) => {
   return (
-    <Card
-      className="hover:scale-[1.02] transition-transform duration-200 h-full border-2"
-      style={{ borderColor: "#E3E3E3" }}
-    >
+    <Card className="hover:scale-[1.02] transition-transform duration-200 h-full border-2 border-[#E3E3E3]">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-[#234C6A]">
           <span>{strategy.icon}</span>

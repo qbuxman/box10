@@ -20,12 +20,12 @@ const UserInfo = ({
   const getIcon = (type: string) => {
     if (type === "Deposit") {
       return (
-        <ArrowDownCircle className="w-6 h-6" style={{ color: "#22c55e" }} />
+        <ArrowDownCircle className="w-6 h-6 text-green-500" />
       )
     } else if (type === "Withdraw") {
-      return <ArrowUpCircle className="w-6 h-6" style={{ color: "#ef4444" }} />
+      return <ArrowUpCircle className="w-6 h-6 text-red-500" />
     } else {
-      return <Gift className="w-6 h-6" style={{ color: "#f59e0b" }} />
+      return <Gift className="w-6 h-6 text-amber-500" />
     }
   }
 
@@ -33,16 +33,13 @@ const UserInfo = ({
     <div className="max-w-6xl mx-auto p-6 space-y-8">
       {/* Header */}
       <div className="text-center space-y-2">
-        <div
-          className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4"
-          style={{ backgroundColor: "#234C6A" }}
-        >
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 bg-[#234C6A]">
           <User2 className="text-white text-2xl" />
         </div>
-        <h1 className="text-4xl font-bold" style={{ color: "#234C6A" }}>
+        <h1 className="text-4xl font-bold text-[#234C6A]">
           Mon Compte
         </h1>
-        <p className="text-lg" style={{ color: "#456882" }}>
+        <p className="text-lg text-[#456882]">
           Historique de vos transactions
         </p>
       </div>
@@ -50,7 +47,7 @@ const UserInfo = ({
       {/* Transactions List */}
       {transactionEvents.length > 0 ? (
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold" style={{ color: "#234C6A" }}>
+          <h2 className="text-2xl font-semibold text-[#234C6A]">
             Transactions ({transactionEvents.length})
           </h2>
           <div className="grid gap-4">
@@ -59,19 +56,17 @@ const UserInfo = ({
               return (
                 <Card
                   key={crypto.randomUUID()}
-                  className="border-2 hover:shadow-md transition-shadow duration-200"
-                  style={{ borderColor: "#E3E3E3" }}
+                  className="border-2 border-[#E3E3E3] hover:shadow-md transition-shadow duration-200"
                 >
                   <CardHeader>
                     <CardTitle className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         {getIcon(e.type)}
-                        <span style={{ color: "#234C6A" }}>{e.type}</span>
+                        <span className="text-[#234C6A]">{e.type}</span>
                       </div>
                       <Badge
                         variant="outline"
-                        className="text-sm"
-                        style={{ borderColor: "#234C6A", color: "#234C6A" }}
+                        className="text-sm border-[#234C6A] text-[#234C6A]"
                       >
                         {formatUnits(e.amount, tokenInfo.decimals)}{" "}
                         {tokenInfo.symbol}
@@ -81,36 +76,27 @@ const UserInfo = ({
                   <CardContent className="space-y-2">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                       <div>
-                        <p className="font-medium" style={{ color: "#234C6A" }}>
+                        <p className="font-medium text-[#234C6A]">
                           Compte
                         </p>
-                        <p
-                          className="font-mono text-xs truncate"
-                          style={{ color: "#456882" }}
-                        >
+                        <p className="font-mono text-xs truncate text-[#456882]">
                           {e.account}
                         </p>
                       </div>
                       <div>
-                        <p className="font-medium" style={{ color: "#234C6A" }}>
+                        <p className="font-medium text-[#234C6A]">
                           Bloc
                         </p>
-                        <p style={{ color: "#456882" }}>
+                        <p className="text-[#456882]">
                           #{e.blockNumber.toString()}
                         </p>
                       </div>
                     </div>
                     <div>
-                      <p
-                        className="font-medium text-sm"
-                        style={{ color: "#234C6A" }}
-                      >
+                      <p className="font-medium text-sm text-[#234C6A]">
                         Transaction Hash
                       </p>
-                      <p
-                        className="font-mono text-xs truncate"
-                        style={{ color: "#456882" }}
-                      >
+                      <p className="font-mono text-xs truncate text-[#456882]">
                         {e.transactionHash}
                       </p>
                     </div>
@@ -121,12 +107,12 @@ const UserInfo = ({
           </div>
         </div>
       ) : (
-        <Card className="border-2" style={{ borderColor: "#E3E3E3" }}>
+        <Card className="border-2 border-[#E3E3E3]">
           <CardContent className="py-12 text-center">
-            <p className="text-lg" style={{ color: "#456882" }}>
+            <p className="text-lg text-[#456882]">
               Aucune transaction trouvée pour le moment.
             </p>
-            <p className="text-sm mt-2" style={{ color: "#456882" }}>
+            <p className="text-sm mt-2 text-[#456882]">
               Vos dépôts et retraits Aave apparaîtront ici.
             </p>
           </CardContent>

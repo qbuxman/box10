@@ -57,16 +57,13 @@ const LearnBlockchainCategory = () => {
     <div className="max-w-4xl mx-auto p-6 space-y-8">
       {/* Header */}
       <div className="text-center space-y-2">
-        <div
-          className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4"
-          style={{ backgroundColor: "#234C6A" }}
-        >
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 bg-[#234C6A]">
           <GraduationCap className="w-8 h-8 text-white" />
         </div>
-        <h1 className="text-4xl font-bold" style={{ color: "#234C6A" }}>
+        <h1 className="text-4xl font-bold text-[#234C6A]">
           {lesson?.title}
         </h1>
-        <p className="text-lg" style={{ color: "#456882" }}>
+        <p className="text-lg text-[#456882]">
           {lesson?.subtitle}
         </p>
       </div>
@@ -75,15 +72,14 @@ const LearnBlockchainCategory = () => {
       {isLoading ? (
         <div className="flex flex-col items-center justify-center h-64 gap-4">
           <Loader className="w-8 h-8 animate-spin text-[#234C6A]" />
-          <p className="text-lg" style={{ color: "#456882" }}>
+          <p className="text-lg text-[#456882]">
             Chargement en cours...
           </p>
         </div>
       ) : (
         <div className="space-y-6">
           <div
-            className="prose max-w-none whitespace-pre-wrap text-lg"
-            style={{ color: "#456882" }}
+            className="prose max-w-none whitespace-pre-wrap text-lg text-[#456882]"
             dangerouslySetInnerHTML={{ __html: lesson?.content as string }}
           />
           {isConnected && lesson && (
@@ -91,8 +87,7 @@ const LearnBlockchainCategory = () => {
               <Button
                 onClick={claimTokenForLesson}
                 disabled={isClaim}
-                className="px-8 py-6 text-white font-medium transition-all hover:opacity-90 cursor-pointer"
-                style={{ backgroundColor: "#456882" }}
+                className="px-8 py-6 text-white font-medium transition-all hover:opacity-90 cursor-pointer bg-[#456882]"
               >
                 {isClaim ? (
                   <>

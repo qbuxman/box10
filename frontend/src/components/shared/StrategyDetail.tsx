@@ -89,10 +89,7 @@ const StrategyDetail = ({ strategy }: { strategy: StrategyDetails | null }) => {
     return (
       <div className="max-w-4xl mx-auto p-6 space-y-8">
         <div className="text-center space-y-2">
-          <div
-            className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4"
-            style={{ backgroundColor: "#234C6A" }}
-          >
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 bg-[#234C6A]">
             <Send className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-4xl font-bold text-[#234C6A]">
@@ -102,13 +99,13 @@ const StrategyDetail = ({ strategy }: { strategy: StrategyDetails | null }) => {
             Cette stratégie n'est pas disponible pour le moment.
           </p>
         </div>
-        <Card className="border-2" style={{ borderColor: "#E3E3E3" }}>
+        <Card className="border-2 border-[#E3E3E3]">
           <CardContent className="py-12 text-center">
-            <p className="text-lg" style={{ color: "#456882" }}>
+            <p className="text-lg text-[#456882]">
               La stratégie que vous recherchez n'existe pas ou n'est pas encore
               active.
             </p>
-            <p className="text-sm mt-2" style={{ color: "#456882" }}>
+            <p className="text-sm mt-2 text-[#456882]">
               Veuillez revenir à la liste des stratégies disponibles.
             </p>
           </CardContent>
@@ -123,10 +120,7 @@ const StrategyDetail = ({ strategy }: { strategy: StrategyDetails | null }) => {
       <div className="space-y-6">
         {/* Icon et titre */}
         <div className="text-center space-y-2">
-          <div
-            className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4"
-            style={{ backgroundColor: "#234C6A" }}
-          >
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 bg-[#234C6A]">
             <Send className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-4xl font-bold text-[#234C6A]">
@@ -138,13 +132,10 @@ const StrategyDetail = ({ strategy }: { strategy: StrategyDetails | null }) => {
         {/* Details et Horizon */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6 px-4">
           <div className="space-y-2">
-            <h3
-              className="text-sm font-semibold uppercase tracking-wide flex gap-2 items-center"
-              style={{ color: "#234C6A" }}
-            >
+            <h3 className="text-sm font-semibold uppercase tracking-wide flex gap-2 items-center text-[#234C6A]">
               <Puzzle /> Fonctionnement réel
             </h3>
-            <p className="text-sm leading-relaxed" style={{ color: "#456882" }}>
+            <p className="text-sm leading-relaxed text-[#456882]">
               {strategy.details}
             </p>
           </div>
@@ -153,7 +144,7 @@ const StrategyDetail = ({ strategy }: { strategy: StrategyDetails | null }) => {
             <h3 className="text-sm font-semibold uppercase tracking-wide flex gap-2 items-center text-[#234C6A]">
               <Timer /> Horizon
             </h3>
-            <p className="text-sm leading-relaxed" style={{ color: "#456882" }}>
+            <p className="text-sm leading-relaxed text-[#456882]">
               {strategy.horizon}
             </p>
           </div>
@@ -210,8 +201,7 @@ const StrategyDetail = ({ strategy }: { strategy: StrategyDetails | null }) => {
             <div className="space-y-2">
               <label
                 htmlFor="amount-input"
-                className="text-sm font-medium"
-                style={{ color: "#234C6A" }}
+                className="text-sm font-medium text-[#234C6A]"
               >
                 Montant à envoyer
               </label>
@@ -222,8 +212,7 @@ const StrategyDetail = ({ strategy }: { strategy: StrategyDetails | null }) => {
                 min={0}
                 onChange={(e) => setAmountToSend(e.target.value)}
                 placeholder="0"
-                className="border-2"
-                style={{ borderColor: "#E3E3E3" }}
+                className="border-2 border-[#E3E3E3]"
               />
             </div>
           </div>
