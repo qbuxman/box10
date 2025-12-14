@@ -14,7 +14,7 @@ const UserInfo = ({
       return { decimals: 6, symbol: "USDC" }
     }
     // Affichage limité à 1 décimal pour plus de simplicité pour l'utilisateur
-    return { decimals: 1, symbol: "BOX10" }
+    return { decimals: 0, symbol: "BOX10" }
   }
 
   const getIcon = (type: string) => {
